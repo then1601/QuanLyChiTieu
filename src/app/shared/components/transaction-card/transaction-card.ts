@@ -9,8 +9,7 @@ import { CategoryIconComponent } from '../category-icon/category-icon';
   selector: 'app-transaction-card',
   standalone: true,
   // BẮT BUỘC phải import các component/pipe sử dụng trong template vào đây
-  imports: [CommonModule, CurrencyPipe, 
-  ], 
+  imports: [CommonModule, CurrencyPipe, CategoryIconComponent],
   template: `
     <div class="transaction-item">
       <div class="left">
