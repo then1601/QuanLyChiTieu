@@ -1,0 +1,21 @@
+.page-container { min-height: 100vh; padding: 24px 16px; background: #f8f9fd; font-family: sans-serif; }
+.page-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; }
+.eyebrow { color: #64748b; font-size: 10px; font-weight: 700; letter-spacing: 1px; }
+h1 { margin: 5px 0 0; color: #1e293b; font-size: 26px; }
+.header-icon { color: #1a56db; font-size: 30px; }
+.profile-card, .settings-card { padding: 16px; margin-bottom: 16px; border-radius: 16px; background: #fff; }
+.profile-card { display: flex; align-items: center; gap: 12px; }
+.profile-card strong, .profile-card span { display: block; }
+.profile-card strong { color: #1e293b; }
+.profile-card div span { margin-top: 4px; color: #94a3b8; font-size: 12px; }
+.avatar { display: grid; width: 44px; height: 44px; place-items: center; border-radius: 14px; color: #1a56db; background: #dbeafe; }
+.chevron { margin-left: auto; color: #94a3b8; }
+.settings-card h2 { margin: 0 0 8px; color: #94a3b8; font-size: 12px; font-weight: 700; text-transform: uppercase; }
+.setting-row { display: flex; align-items: center; justify-content: space-between; width: 100%; padding: 14px 0; border: 0; border-bottom: 1px solid #f1f5f9; color: #334155; background: transparent; font: inherit; text-align: left; }
+.setting-row:last-child { border-bottom: 0; }
+.setting-row > span { display: flex; align-items: center; gap: 12px; }
+.setting-row i { color: #64748b; font-size: 21px; font-style: normal; }
+.link-row { text-decoration: none; cursor: pointer; }
+.danger { color: #ef5350; cursor: pointer; }
+.danger i { color: #ef5350; }
+.version { margin-top: 30px; color: #94a3b8; font-size: 12px; text-align: center; }

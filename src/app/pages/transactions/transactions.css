@@ -1,0 +1,17 @@
+.page-container { min-height: 100vh; padding: 24px 16px; background: #f8f9fd; font-family: sans-serif; }
+.page-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; }
+.eyebrow { color: #64748b; font-size: 10px; font-weight: 700; letter-spacing: 1px; }
+h1 { margin: 5px 0 0; color: #1e293b; font-size: 26px; }
+.icon-button { display: grid; width: 42px; height: 42px; place-items: center; border-radius: 12px; color: #fff; background: #1a56db; text-decoration: none; }
+.filter-bar { display: flex; gap: 8px; margin-bottom: 18px; overflow-x: auto; }
+.filter-bar button { padding: 10px 15px; border: 0; border-radius: 20px; color: #64748b; background: #fff; white-space: nowrap; cursor: pointer; }
+.filter-bar button.active { color: #fff; background: #1a56db; }
+.transaction-list { overflow: hidden; border-radius: 16px; background: #fff; }
+.transaction-row { display: flex; align-items: center; padding: 0 12px 0 16px; }
+.transaction-row app-transaction-card { flex: 1; }
+.delete-button { border: 0; color: #ef5350; background: transparent; cursor: pointer; }
+.empty-state { padding: 60px 24px; text-align: center; color: #64748b; }
+.empty-state .material-icons { color: #94a3b8; font-size: 54px; }
+.empty-state h2 { margin: 12px 0 6px; color: #1e293b; font-size: 20px; }
+.empty-state p { margin: 0 auto 20px; max-width: 280px; }
+.empty-state a { display: inline-block; padding: 11px 18px; border-radius: 10px; color: #fff; background: #1a56db; text-decoration: none; }

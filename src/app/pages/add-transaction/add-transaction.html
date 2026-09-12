@@ -1,0 +1,42 @@
+<section class="page-container">
+  <header class="page-header">
+    <a routerLink="/home" class="back-button"><span class="material-icons">arrow_back</span></a>
+    <h1>Thêm giao dịch</h1>
+    <span class="header-spacer"></span>
+  </header>
+
+  <form class="form-card" (ngSubmit)="save()">
+    <div class="type-switch">
+      <button type="button" [class.active]="type === 'expense'" (click)="type = 'expense'; categoryId = ''">
+        <span class="material-icons">arrow_downward</span> Khoản chi
+      </button>
+      <button type="button" [class.active]="type === 'income'" (click)="type = 'income'; categoryId = ''">
+        <span class="material-icons">arrow_upward</span> Khoản thu
+      </button>
+    </div>
+
+    <label>Số tiền
+      <div class="amount-input">
+        <input type="number" name="amount" [(ngModel)]="amount" min="1" placeholder="0" required>
+        <span>VNĐ</span>
+      </div>
+    </label>
+
+    <label>Danh mục
+      <select name="categoryId" [(ngModel)]="categoryId" required>
+        <option value="" disabled>Chọn danh mục</option>
+        <option *ngFor="let category of availableCategories" [value]="category.id">{{ category.name }}</option>
+      </select>
+    </label>
+
+    <label>Ngày giao dịch
+      <input type="date" name="date" [(ngModel)]="date" required>
+    </label>
+
+    <label>Ghi chú <span class="optional">(không bắt buộc)</span>
+      <textarea name="note" [(ngModel)]="note" rows="3" placeholder="Ví dụ: Ăn trưa cùng đồng nghiệp"></textarea>
+    </label>
+
+    <button class="submit-button" type="submit">Lưu giao dịch</button>
+  </form>
+</section>

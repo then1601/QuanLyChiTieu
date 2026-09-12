@@ -1,0 +1,37 @@
+<section class="page-container">
+  <header class="page-header">
+    <div>
+      <span class="eyebrow">TÙY CHỈNH</span>
+      <h1>Cài đặt</h1>
+    </div>
+    <span class="material-icons header-icon">tune</span>
+  </header>
+
+  <section class="profile-card">
+    <div class="avatar"><span class="material-icons">person</span></div>
+    <div><strong>Ví chi tiêu cá nhân</strong><span>Quản lý tài chính đơn giản</span></div>
+    <span class="material-icons chevron">chevron_right</span>
+  </section>
+
+  <section class="settings-card">
+    <h2>Ứng dụng</h2>
+    <label class="setting-row">
+      <span><i class="material-icons">dark_mode</i><span>Chế độ tối</span></span>
+      <input type="checkbox" [(ngModel)]="darkMode">
+    </label>
+    <a class="setting-row link-row" routerLink="/statistics">
+      <span><i class="material-icons">insights</i><span>Xem báo cáo chi tiêu</span></span>
+      <i class="material-icons">chevron_right</i>
+    </a>
+  </section>
+
+  <section class="settings-card">
+    <h2>Dữ liệu</h2>
+    <button class="setting-row danger" (click)="resetData()">
+      <span><i class="material-icons">delete_outline</i><span>Xóa dữ liệu giao dịch</span></span>
+      <i class="material-icons">chevron_right</i>
+    </button>
+  </section>
+
+  <p class="version">Quản lý chi tiêu · Phiên bản 1.0.0</p>
+</section>

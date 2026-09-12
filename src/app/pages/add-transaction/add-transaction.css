@@ -1,0 +1,16 @@
+.page-container { min-height: 100vh; padding: 24px 16px; background: #f8f9fd; font-family: sans-serif; }
+.page-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 24px; }
+.page-header h1 { margin: 0; color: #1e293b; font-size: 21px; }
+.back-button { color: #334155; }
+.header-spacer { width: 24px; }
+.form-card { padding: 18px; border-radius: 18px; background: #fff; box-shadow: 0 4px 18px rgba(15, 23, 42, .04); }
+.type-switch { display: flex; gap: 8px; padding: 4px; margin-bottom: 24px; border-radius: 12px; background: #f1f5f9; }
+.type-switch button { flex: 1; padding: 11px 6px; border: 0; border-radius: 9px; color: #64748b; background: transparent; cursor: pointer; }
+.type-switch button.active { color: #1a56db; background: #fff; box-shadow: 0 2px 7px rgba(15, 23, 42, .08); }
+.type-switch .material-icons { vertical-align: middle; font-size: 18px; }
+label { display: block; margin: 16px 0; color: #334155; font-size: 14px; font-weight: 600; }
+input, select, textarea { box-sizing: border-box; width: 100%; margin-top: 8px; padding: 13px; border: 1px solid #e2e8f0; border-radius: 10px; color: #1e293b; background: #fff; font: inherit; }
+.amount-input { display: flex; align-items: center; gap: 8px; margin-top: 8px; padding: 0 13px; border: 1px solid #e2e8f0; border-radius: 10px; }
+.amount-input input { margin: 0; padding-left: 0; border: 0; outline: 0; font-size: 22px; font-weight: 700; }
+.amount-input span, .optional { color: #94a3b8; font-size: 12px; font-weight: 400; }
+.submit-button { width: 100%; padding: 14px; margin-top: 12px; border: 0; border-radius: 11px; color: #fff; background: #1a56db; font-size: 15px; font-weight: 700; cursor: pointer; }

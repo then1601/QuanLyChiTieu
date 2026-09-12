@@ -1,0 +1,47 @@
+<div class="page-container">
+  <header class="header">
+    <div class="title">
+      <span class="material-icons">account_balance_wallet</span>
+      <h1>Chi tiêu của tôi</h1>
+    </div>
+    <span class="material-icons">settings</span>
+  </header>
+
+  <div class="month-selector">
+    <span>Tháng 09/2026</span>
+    <span class="material-icons">expand_more</span>
+  </div>
+
+  <div class="balance-card">
+    <div class="balance-info">
+      <span class="label">Số dư hiện tại</span>
+      <h2 class="amount">{{ summary.balance | appCurrency:'income' }}</h2>
+    </div>
+    <span class="material-icons wallet-icon">account_balance_wallet</span>
+  </div>
+
+  <div class="summary-row">
+    <div class="summary-box income">
+      <span class="label">Tổng thu <span class="material-icons">arrow_upward</span></span>
+      <span class="value">{{ summary.totalIncome | appCurrency:'income' }}</span>
+    </div>
+    <div class="summary-box expense">
+      <span class="label">Tổng chi <span class="material-icons">arrow_downward</span></span>
+      <span class="value">{{ summary.totalExpense | appCurrency:'expense' }}</span>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-header">
+      <h3>Giao dịch gần đây</h3>
+      <a href="#">Xem tất cả</a>
+    </div>
+    <div class="transaction-list">
+      <app-transaction-card 
+        *ngFor="let tx of recentTransactions" 
+        [transaction]="tx" 
+        [category]="getCategory(tx.categoryId)">
+      </app-transaction-card>
+    </div>
+  </div>
+</div>

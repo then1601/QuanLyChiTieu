@@ -1,0 +1,32 @@
+<section class="page-container">
+  <header class="page-header">
+    <div>
+      <span class="eyebrow">TỔNG QUAN</span>
+      <h1>Thống kê</h1>
+    </div>
+    <span class="material-icons header-icon">insights</span>
+  </header>
+
+  <div class="summary-card">
+    <span>Chi tiêu tháng này</span>
+    <strong>{{ summary.totalExpense | appCurrency:'expense' }}</strong>
+    <div class="balance-line">
+      <span>Số dư</span>
+      <b>{{ summary.balance | appCurrency:'income' }}</b>
+    </div>
+  </div>
+
+  <section class="section-card">
+    <h2>Chi tiêu theo danh mục</h2>
+    <div class="category-row" *ngFor="let category of categoryBreakdown">
+      <div class="category-info">
+        <span class="dot" [style.background]="category.color"></span>
+        <span>{{ category.name }}</span>
+        <small>{{ category.percent }}%</small>
+      </div>
+      <strong>{{ category.amount | appCurrency:'expense' }}</strong>
+      <div class="progress"><span [style.width.%]="category.percent" [style.background]="category.color"></span></div>
+    </div>
+    <p class="muted" *ngIf="!categoryBreakdown.length">Chưa có dữ liệu chi tiêu.</p>
+  </section>
+</section>

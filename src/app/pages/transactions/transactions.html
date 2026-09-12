@@ -1,0 +1,35 @@
+<section class="page-container">
+  <header class="page-header">
+    <div>
+      <span class="eyebrow">QUẢN LÝ CHI TIÊU</span>
+      <h1>Giao dịch</h1>
+    </div>
+    <a class="icon-button" routerLink="/add" aria-label="Thêm giao dịch">
+      <span class="material-icons">add</span>
+    </a>
+  </header>
+
+  <div class="filter-bar">
+    <button [class.active]="filter === 'all'" (click)="filter = 'all'">Tất cả</button>
+    <button [class.active]="filter === 'income'" (click)="filter = 'income'">Khoản thu</button>
+    <button [class.active]="filter === 'expense'" (click)="filter = 'expense'">Khoản chi</button>
+  </div>
+
+  <div class="transaction-list" *ngIf="transactions.length; else empty">
+    <div class="transaction-row" *ngFor="let transaction of transactions">
+      <app-transaction-card [transaction]="transaction" [category]="getCategory(transaction.categoryId)" />
+      <button class="delete-button" (click)="deleteTransaction(transaction.id)" aria-label="Xóa giao dịch">
+        <span class="material-icons">delete_outline</span>
+      </button>
+    </div>
+  </div>
+
+  <ng-template #empty>
+    <div class="empty-state">
+      <span class="material-icons">receipt_long</span>
+      <h2>Chưa có giao dịch</h2>
+      <p>Thêm giao dịch đầu tiên để theo dõi chi tiêu của bạn.</p>
+      <a routerLink="/add">Thêm giao dịch</a>
+    </div>
+  </ng-template>
+</section>
