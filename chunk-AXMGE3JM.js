@@ -1,0 +1,1 @@
+import{Aa as i}from"./chunk-FEGV27IQ.js";var m=class n{transform(e,r="expense"){if(e==null)return"";let t=new Intl.NumberFormat("vi-VN").format(Math.abs(e))+"\u0111";return r==="income"?`+${t}`:`-${t}`}static \u0275fac=function(r){return new(r||n)};static \u0275pipe=i({name:"appCurrency",type:n,pure:!0})};export{m as a};
