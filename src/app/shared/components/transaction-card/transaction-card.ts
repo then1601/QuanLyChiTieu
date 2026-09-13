@@ -32,6 +32,9 @@ import { CategoryIconComponent } from '../category-icon/category-icon';
     .date { font-size: 12px; color: #888; margin-top: 4px; }
     .amount { font-weight: 600; color: #EF5350; font-size: 14px; }
     .amount.income { color: #66BB6A; }
+    :host-context(body.dark-theme) .transaction-item { border-bottom-color: #334155; }
+    :host-context(body.dark-theme) .name { color: #e2e8f0; }
+    :host-context(body.dark-theme) .date { color: #94a3b8; }
   `]
 })
 export class TransactionCardComponent {

@@ -62,3 +62,41 @@ body.dark-theme .form-card,
 body.dark-theme .statistics-card {
   background-color: #1e293b;
 }
+
+body.dark-theme .filter-bar button,
+body.dark-theme .transaction-list,
+body.dark-theme .section-card {
+  color: #e2e8f0;
+  background-color: #1e293b;
+}
+
+body.dark-theme .empty-state h2,
+body.dark-theme .section-card h2,
+body.dark-theme .category-row,
+body.dark-theme .category-row strong {
+  color: #e2e8f0;
+}
+
+body.dark-theme .empty-state,
+body.dark-theme .muted,
+body.dark-theme .category-info small {
+  color: #94a3b8;
+}
+
+body.dark-theme .progress {
+  background-color: #334155;
+}
+
+body.dark-theme input,
+body.dark-theme select,
+body.dark-theme textarea,
+body.dark-theme .amount-input {
+  color: #e2e8f0;
+  border-color: #475569;
+  background-color: #0f172a;
+}
+
+body.dark-theme input::placeholder,
+body.dark-theme textarea::placeholder {
+  color: #94a3b8;
+}

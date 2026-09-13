@@ -30,10 +30,11 @@ export class AuthService {
 
   async signIn(email: string, password: string): Promise<void> {
     const client = this.requireClient();
-    const { error } = await client.auth.signInWithPassword({ email, password });
+    const { data, error } = await client.auth.signInWithPassword({ email, password });
     if (error) {
       throw error;
     }
+    this.userSubject.next(data.user);
   }
 
   async signUp(email: string, password: string): Promise<void> {
@@ -57,7 +58,9 @@ export class AuthService {
     const client = this.requireClient();
     const { data, error } = await client.auth.getSession();
     if (error) {
-      throw error;
+      this.userSubject.next(null);
+      console.error('Không thể khôi phục phiên đăng nhập:', error.message);
+      return;
     }
     this.userSubject.next(data.session?.user ?? null);
   }

@@ -16,7 +16,7 @@
   <div class="balance-card">
     <div class="balance-info">
       <span class="label">Số dư hiện tại</span>
-      <h2 class="amount">{{ summary.balance | appCurrency:'income' }}</h2>
+      <h2 class="amount">{{ summary.balance | appCurrency:(summary.balance >= 0 ? 'income' : 'expense') }}</h2>
     </div>
     <span class="material-icons wallet-icon">account_balance_wallet</span>
   </div>
