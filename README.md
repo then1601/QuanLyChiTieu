@@ -1,5 +1,21 @@
 # QuanLyChiTieu
 
+## Supabase setup
+
+1. Tạo project tại [supabase.com](https://supabase.com).
+2. Vào **SQL Editor**, chạy nội dung file `supabase/schema.sql`.
+3. Vào **Project Settings → API**, sao chép **Project URL** và **anon public key** vào `src/environments/environment.ts`:
+
+```ts
+export const environment = {
+  production: false,
+  supabaseUrl: 'https://your-project.supabase.co',
+  supabaseAnonKey: 'your-anon-public-key',
+};
+```
+
+Chỉ sử dụng `anon public key` ở frontend; không đưa `service_role key` vào mã nguồn. Sau khi cấu hình, người dùng có thể đăng ký, đăng nhập và dữ liệu giao dịch sẽ được lưu riêng theo tài khoản.
+
 This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 21.2.23.
 
 ## Development server

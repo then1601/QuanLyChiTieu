@@ -3,6 +3,8 @@ import { RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { StorageService } from '../../core/services/storage';
 import { TransactionService } from '../../core/services/transaction';
+import { AuthService } from '../../core/services/auth';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-settings',
@@ -17,6 +19,8 @@ export class Settings {
   constructor(
     private readonly storage: StorageService,
     private readonly transactionService: TransactionService,
+    private readonly auth: AuthService,
+    private readonly router: Router,
   ) {}
 
   resetData(): void {
@@ -24,5 +28,10 @@ export class Settings {
       this.storage.removeItem('transactions');
       window.location.reload();
     }
+  }
+
+  async logout(): Promise<void> {
+    await this.auth.signOut();
+    await this.router.navigate(['/login']);
   }
 }

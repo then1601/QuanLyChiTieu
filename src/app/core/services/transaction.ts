@@ -2,6 +2,8 @@ import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import { Transaction } from '../models/transaction';
 import { StorageService } from './storage';
+import { AuthService } from './auth';
+import { SupabaseService } from './supabase';
 
 @Injectable({ providedIn: 'root' })
 export class TransactionService {
@@ -9,11 +11,21 @@ export class TransactionService {
   private transactionsSubject = new BehaviorSubject<Transaction[]>([]);
   transactions$ = this.transactionsSubject.asObservable();
 
-  constructor(private storage: StorageService) {
-    this.loadTransactions();
+  constructor(
+    private storage: StorageService,
+    private readonly auth: AuthService,
+    private readonly supabase: SupabaseService,
+  ) {
+    this.auth.user$.subscribe((user) => {
+      if (this.supabase.isConfigured) {
+        void this.loadTransactionsFromSupabase(user?.id ?? null);
+      } else {
+        this.loadLocalTransactions();
+      }
+    });
   }
 
-  private loadTransactions(): void {
+  private loadLocalTransactions(): void {
     const saved = this.storage.getItem<Transaction[]>(this.STORAGE_KEY);
     if (saved) {
       this.transactionsSubject.next(saved);
@@ -29,8 +41,36 @@ export class TransactionService {
     }
   }
 
+  private async loadTransactionsFromSupabase(userId: string | null): Promise<void> {
+      if (!userId || !this.supabase.client) {
+        this.transactionsSubject.next([]);
+        return;
+      }
+
+      const { data, error } = await this.supabase.client
+        .from('transactions')
+        .select('id, amount, type, category_id, date, note')
+        .eq('user_id', userId)
+        .order('date', { ascending: false });
+
+      if (error) {
+        console.error('Không thể tải giao dịch từ Supabase:', error.message);
+        return;
+      }
+
+      const transactions = (data ?? []).map((item) => ({
+        id: String(item.id),
+        amount: Number(item.amount),
+        type: item.type as Transaction['type'],
+        categoryId: String(item.category_id),
+        date: String(item.date),
+        note: item.note ? String(item.note) : undefined,
+      }));
+      this.transactionsSubject.next(transactions);
+  }
+
   private generateId(): string {
-    return Math.random().toString(36).substring(2, 9);
+    return crypto.randomUUID();
   }
 
   addTransaction(transaction: Omit<Transaction, 'id'>): void {
@@ -38,7 +78,23 @@ export class TransactionService {
     const newTransaction = { ...transaction, id: this.generateId() };
     const updated = [...current, newTransaction];
     this.transactionsSubject.next(updated);
-    this.storage.setItem(this.STORAGE_KEY, updated);
+    this.persist(updated);
+    const userId = this.auth.user?.id;
+    if (userId && this.supabase.client) {
+      void this.supabase.client.from('transactions').insert({
+        id: newTransaction.id,
+        user_id: userId,
+        amount: newTransaction.amount,
+        type: newTransaction.type,
+        category_id: newTransaction.categoryId,
+        date: newTransaction.date,
+        note: newTransaction.note || null,
+      }).then(({ error }) => {
+        if (error) {
+          console.error('Không thể lưu giao dịch vào Supabase:', error.message);
+        }
+      });
+    }
   }
 
   getRecentTransactions(limit: number = 5): Transaction[] {
@@ -54,6 +110,18 @@ export class TransactionService {
   deleteTransaction(id: string): void {
     const updated = this.transactionsSubject.value.filter((transaction) => transaction.id !== id);
     this.transactionsSubject.next(updated);
-    this.storage.setItem(this.STORAGE_KEY, updated);
+    this.persist(updated);
+    if (this.auth.user?.id && this.supabase.client) {
+      void this.supabase.client.from('transactions').delete().eq('id', id).eq('user_id', this.auth.user.id)
+        .then(({ error }) => {
+          if (error) {
+            console.error('Không thể xóa giao dịch trên Supabase:', error.message);
+          }
+        });
+    }
+  }
+
+  private persist(transactions: Transaction[]): void {
+    this.storage.setItem(this.STORAGE_KEY, transactions);
   }
 }

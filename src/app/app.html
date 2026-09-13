@@ -2,6 +2,7 @@
   <router-outlet />
 </main>
 
+@if (user$ | async) {
 <nav class="bottom-nav" aria-label="Điều hướng chính">
   <a routerLink="/home" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
     <span class="material-icons">home</span>
@@ -23,3 +24,4 @@
     <span>Cài đặt</span>
   </a>
 </nav>
+}

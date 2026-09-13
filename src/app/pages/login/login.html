@@ -1,0 +1,27 @@
+<main class="auth-page">
+  <section class="auth-card">
+    <span class="material-icons logo">account_balance_wallet</span>
+    <span class="eyebrow">QUẢN LÝ CHI TIÊU</span>
+    <h1>{{ isSignUp ? 'Tạo tài khoản' : 'Đăng nhập' }}</h1>
+    <p class="subtitle">Lưu và đồng bộ giao dịch của bạn trên mọi thiết bị.</p>
+
+    <p class="message error" *ngIf="errorMessage">{{ errorMessage }}</p>
+    <p class="message success" *ngIf="successMessage">{{ successMessage }}</p>
+
+    <form (ngSubmit)="submit()">
+      <label>Email
+        <input type="email" name="email" [(ngModel)]="email" required autocomplete="email">
+      </label>
+      <label>Mật khẩu
+        <input type="password" name="password" [(ngModel)]="password" required minlength="6" autocomplete="current-password">
+      </label>
+      <button type="submit" [disabled]="loading">
+        {{ loading ? 'Đang xử lý...' : (isSignUp ? 'Đăng ký' : 'Đăng nhập') }}
+      </button>
+    </form>
+
+    <button class="switch-button" type="button" (click)="isSignUp = !isSignUp; errorMessage = ''; successMessage = ''">
+      {{ isSignUp ? 'Đã có tài khoản? Đăng nhập' : 'Chưa có tài khoản? Đăng ký' }}
+    </button>
+  </section>
+</main>
