@@ -53,5 +53,11 @@ export class AddTransaction {
     } finally {
       this.saving = false;
     }
+
+    normalizeAmount(): void {
+      if (this.amount && this.amount > 0 && this.amount < 1000) {
+        this.amount *= 1000;
+      }
+    }
   }
 }

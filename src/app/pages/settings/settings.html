@@ -26,6 +26,27 @@
   </section>
 
   <section class="settings-card">
+    <h2>Danh mục giao dịch</h2>
+    <form class="category-form" (ngSubmit)="addCategory()">
+      <input name="newCategoryName" [(ngModel)]="newCategoryName" placeholder="Tên danh mục mới" required>
+      <select name="newCategoryType" [(ngModel)]="newCategoryType">
+        <option value="expense">Khoản chi</option>
+        <option value="income">Khoản thu</option>
+      </select>
+      <button type="submit" [disabled]="categorySaving">
+        {{ categorySaving ? 'Đang thêm...' : 'Thêm danh mục' }}
+      </button>
+    </form>
+    <p class="category-error" *ngIf="categoryError">{{ categoryError }}</p>
+    <div class="category-list">
+      <span class="category-chip" *ngFor="let category of categories">
+        <i class="material-icons">{{ category.icon }}</i>
+        {{ category.name }}
+      </span>
+    </div>
+  </section>
+
+  <section class="settings-card">
     <h2>Dữ liệu</h2>
     <button class="setting-row danger" (click)="resetData()">
       <span><i class="material-icons">delete_outline</i><span>Xóa dữ liệu giao dịch</span></span>

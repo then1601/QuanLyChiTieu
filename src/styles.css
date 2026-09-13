@@ -100,3 +100,15 @@ body.dark-theme input::placeholder,
 body.dark-theme textarea::placeholder {
   color: #94a3b8;
 }
+
+body.dark-theme .category-form input,
+body.dark-theme .category-form select {
+  color: #e2e8f0;
+  border-color: #475569;
+  background: #0f172a;
+}
+
+body.dark-theme .category-chip {
+  color: #cbd5e1;
+  background: #334155;
+}

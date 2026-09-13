@@ -1,16 +1,19 @@
 import { Component, inject, PLATFORM_ID } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
 import { RouterLink } from '@angular/router';
+import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { StorageService } from '../../core/services/storage';
 import { TransactionService } from '../../core/services/transaction';
 import { AuthService } from '../../core/services/auth';
 import { Router } from '@angular/router';
+import { CategoryService } from '../../core/services/category';
+import { TransactionType } from '../../core/models/category';
 
 @Component({
   selector: 'app-settings',
   standalone: true,
-  imports: [RouterLink, FormsModule],
+  imports: [CommonModule, RouterLink, FormsModule],
   templateUrl: './settings.html',
   styleUrl: './settings.css',
 })
@@ -18,16 +21,43 @@ export class Settings {
   private readonly platformId = inject(PLATFORM_ID);
   private readonly themeStorageKey = 'darkMode';
   darkMode = false;
+  newCategoryName = '';
+  newCategoryType: TransactionType = 'expense';
+  categoryError = '';
+  categorySaving = false;
 
   constructor(
     private readonly storage: StorageService,
     private readonly transactionService: TransactionService,
     private readonly auth: AuthService,
     private readonly router: Router,
+    private readonly categoryService: CategoryService,
   ) {
     if (isPlatformBrowser(this.platformId)) {
       this.darkMode = this.storage.getItem<boolean>(this.themeStorageKey) ?? false;
       this.applyTheme();
+    }
+
+    get categories() {
+      return this.categoryService.getCategories();
+    }
+
+    async addCategory(): Promise<void> {
+      const name = this.newCategoryName.trim();
+      if (!name) {
+        return;
+      }
+
+      this.categoryError = '';
+      this.categorySaving = true;
+      try {
+        await this.categoryService.addCategory(name, this.newCategoryType);
+        this.newCategoryName = '';
+      } catch (error) {
+        this.categoryError = error instanceof Error ? error.message : 'Không thể tạo danh mục.';
+      } finally {
+        this.categorySaving = false;
+      }
     }
   }
 
