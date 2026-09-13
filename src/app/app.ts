@@ -1,6 +1,6 @@
 import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { Component, inject, PLATFORM_ID } from '@angular/core';
-import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
+import { Router, RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 import { AuthService } from './core/services/auth';
 import { StorageService } from './core/services/storage';
 
@@ -18,10 +18,15 @@ export class App {
   constructor(
     private readonly auth: AuthService,
     private readonly storage: StorageService,
+    private readonly router: Router,
   ) {
     this.user$ = this.auth.user$;
     if (isPlatformBrowser(this.platformId)) {
       document.body.classList.toggle('dark-theme', this.storage.getItem<boolean>('darkMode') ?? false);
     }
+  }
+
+  get showBottomNav(): boolean {
+    return this.router.url !== '/login';
   }
 }

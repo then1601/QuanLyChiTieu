@@ -2,7 +2,7 @@
   <router-outlet />
 </main>
 
-@if (user$ | async) {
+@if ((user$ | async) && showBottomNav) {
 <nav class="bottom-nav" aria-label="Điều hướng chính">
   <a routerLink="/home" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
     <span class="material-icons">home</span>

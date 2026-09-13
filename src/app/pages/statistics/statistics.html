@@ -10,9 +10,13 @@
   <div class="summary-card">
     <span>Chi tiêu tháng này</span>
     <strong>{{ summary.totalExpense | appCurrency:'expense' }}</strong>
+    <div class="income-line">
+      <span>Thu nhập</span>
+      <b>{{ summary.totalIncome | appCurrency:'income' }}</b>
+    </div>
     <div class="balance-line">
       <span>Số dư</span>
-      <b>{{ summary.balance | appCurrency:'income' }}</b>
+      <b>{{ summary.balance | appCurrency:(summary.balance >= 0 ? 'income' : 'expense') }}</b>
     </div>
   </div>
 

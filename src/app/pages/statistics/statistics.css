@@ -6,6 +6,8 @@ h1 { margin: 5px 0 0; color: #1e293b; font-size: 26px; }
 .summary-card { padding: 22px; border-radius: 18px; color: #fff; background: linear-gradient(135deg, #1a56db, #3b82f6); box-shadow: 0 8px 18px rgba(26, 86, 219, .2); }
 .summary-card span { opacity: .85; font-size: 13px; }
 .summary-card strong { display: block; margin: 8px 0 20px; font-size: 28px; }
+.income-line { display: flex; justify-content: space-between; padding-bottom: 14px; }
+.income-line b { font-size: 14px; }
 .balance-line { display: flex; justify-content: space-between; padding-top: 14px; border-top: 1px solid rgba(255,255,255,.2); }
 .balance-line b { font-size: 14px; }
 .section-card { margin-top: 18px; padding: 18px; border-radius: 16px; background: #fff; }
