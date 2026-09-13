@@ -36,6 +36,7 @@ jobs:
 
       - name: Prepare SPA fallback
         run: |
+          cp dist/QuanLyChiTieu/browser/index.csr.html dist/QuanLyChiTieu/browser/index.html
           cp dist/QuanLyChiTieu/browser/index.html dist/QuanLyChiTieu/browser/404.html
           touch dist/QuanLyChiTieu/browser/.nojekyll
 
