@@ -7,10 +7,11 @@
     <span class="material-icons">settings</span>
   </header>
 
-  <div class="month-selector">
-    <span>Tháng 09/2026</span>
+  <label class="month-selector">
+    <span class="material-icons">calendar_month</span>
+    <input type="month" [(ngModel)]="selectedMonth" aria-label="Chọn tháng">
     <span class="material-icons">expand_more</span>
-  </div>
+  </label>
 
   <div class="balance-card">
     <div class="balance-info">

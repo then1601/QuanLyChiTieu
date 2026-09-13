@@ -1,1 +1,64 @@
 /* You can add global styles to this file, and also import other style files */
+html, body {
+  margin: 0;
+  background: #f8f9fd;
+  color: #1e293b;
+  transition: background-color .2s ease, color .2s ease;
+}
+
+body.dark-theme {
+  background: #0f172a;
+  color: #e2e8f0;
+}
+
+body.dark-theme .app-content,
+body.dark-theme .page-container {
+  background: #0f172a;
+}
+
+body.dark-theme .header h1,
+body.dark-theme h1,
+body.dark-theme h2,
+body.dark-theme h3,
+body.dark-theme .section-header h3,
+body.dark-theme .profile-card strong,
+body.dark-theme .setting-row,
+body.dark-theme .month-selector,
+body.dark-theme .month-selector input {
+  color: #e2e8f0;
+}
+
+body.dark-theme .balance-card,
+body.dark-theme .summary-box,
+body.dark-theme .section,
+body.dark-theme .profile-card,
+body.dark-theme .settings-card,
+body.dark-theme .bottom-nav {
+  background-color: #1e293b;
+}
+
+body.dark-theme .summary-box.income {
+  background-color: #12352d;
+}
+
+body.dark-theme .summary-box.expense {
+  background-color: #3b2027;
+}
+
+body.dark-theme .month-selector {
+  background: #1e293b;
+}
+
+body.dark-theme .setting-row {
+  border-color: #334155;
+}
+
+body.dark-theme .bottom-nav {
+  border-top-color: #334155;
+}
+
+body.dark-theme .transaction-card,
+body.dark-theme .form-card,
+body.dark-theme .statistics-card {
+  background-color: #1e293b;
+}

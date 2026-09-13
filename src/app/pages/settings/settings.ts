@@ -1,4 +1,5 @@
-import { Component } from '@angular/core';
+import { Component, inject, PLATFORM_ID } from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { StorageService } from '../../core/services/storage';
@@ -14,6 +15,8 @@ import { Router } from '@angular/router';
   styleUrl: './settings.css',
 })
 export class Settings {
+  private readonly platformId = inject(PLATFORM_ID);
+  private readonly themeStorageKey = 'darkMode';
   darkMode = false;
 
   constructor(
@@ -21,7 +24,23 @@ export class Settings {
     private readonly transactionService: TransactionService,
     private readonly auth: AuthService,
     private readonly router: Router,
-  ) {}
+  ) {
+    if (isPlatformBrowser(this.platformId)) {
+      this.darkMode = this.storage.getItem<boolean>(this.themeStorageKey) ?? false;
+      this.applyTheme();
+    }
+  }
+
+  toggleDarkMode(): void {
+    this.applyTheme();
+    this.storage.setItem(this.themeStorageKey, this.darkMode);
+  }
+
+  private applyTheme(): void {
+    if (isPlatformBrowser(this.platformId)) {
+      document.body.classList.toggle('dark-theme', this.darkMode);
+    }
+  }
 
   resetData(): void {
     if (confirm('Bạn có chắc muốn xóa toàn bộ giao dịch không?')) {

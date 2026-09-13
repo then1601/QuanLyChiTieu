@@ -1,6 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { StatisticsService } from '../../core/services/statistics';
+import { FormsModule } from '@angular/forms';
 import { TransactionService } from '../../core/services/transaction';
 import { CategoryService } from '../../core/services/category';
 import { CurrencyPipe } from '../../shared/pipes/currency-pipe';
@@ -11,24 +11,38 @@ import { Category } from '../../core/models/category';
 @Component({
   selector: 'app-home',
   standalone: true,
-  // BẮT BUỘC import các module/component/pipe cần thiết
-  imports: [CommonModule, CurrencyPipe, TransactionCardComponent], 
+  imports: [CommonModule, FormsModule, CurrencyPipe, TransactionCardComponent],
   templateUrl: './home.html',
   styleUrls: ['./home.css']
 })
-export class HomeComponent implements OnInit {
-  recentTransactions: Transaction[] = [];
-  summary = { totalIncome: 0, totalExpense: 0, balance: 0 };
+export class HomeComponent {
+  selectedMonth = new Date().toISOString().slice(0, 7);
 
   constructor(
-    private statsService: StatisticsService,
     private transactionService: TransactionService,
     private categoryService: CategoryService
   ) {}
 
-  ngOnInit(): void {
-    this.recentTransactions = this.transactionService.getRecentTransactions();
-    this.summary = this.statsService.getSummary();
+  get monthlyTransactions(): Transaction[] {
+    return this.transactionService.getTransactions()
+      .filter((transaction) => transaction.date.slice(0, 7) === this.selectedMonth);
+  }
+
+  get recentTransactions(): Transaction[] {
+    return [...this.monthlyTransactions]
+      .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
+      .slice(0, 5);
+  }
+
+  get summary() {
+    const totalIncome = this.monthlyTransactions
+      .filter((transaction) => transaction.type === 'income')
+      .reduce((sum, transaction) => sum + transaction.amount, 0);
+    const totalExpense = this.monthlyTransactions
+      .filter((transaction) => transaction.type === 'expense')
+      .reduce((sum, transaction) => sum + transaction.amount, 0);
+
+    return { totalIncome, totalExpense, balance: totalIncome - totalExpense };
   }
 
   getCategory(id: string): Category | undefined {

@@ -17,7 +17,7 @@
     <h2>Ứng dụng</h2>
     <label class="setting-row">
       <span><i class="material-icons">dark_mode</i><span>Chế độ tối</span></span>
-      <input type="checkbox" [(ngModel)]="darkMode">
+      <input type="checkbox" [(ngModel)]="darkMode" (ngModelChange)="toggleDarkMode()">
     </label>
     <a class="setting-row link-row" routerLink="/statistics">
       <span><i class="material-icons">insights</i><span>Xem báo cáo chi tiêu</span></span>

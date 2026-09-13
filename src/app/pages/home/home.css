@@ -2,7 +2,8 @@
 .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
 .header .title { display: flex; align-items: center; gap: 8px; color: #1A56DB; }
 .header h1 { font-size: 18px; font-weight: 600; margin: 0; }
-.month-selector { display: inline-flex; align-items: center; gap: 4px; background: white; padding: 6px 12px; border-radius: 20px; font-size: 14px; color: #333; font-weight: 500; margin-bottom: 16px; box-shadow: 0 2px 4px rgba(0,0,0,0.02); }
+.month-selector { display: inline-flex; align-items: center; gap: 4px; background: white; padding: 6px 12px; border-radius: 20px; font-size: 14px; color: #333; font-weight: 500; margin-bottom: 16px; box-shadow: 0 2px 4px rgba(0,0,0,0.02); cursor: pointer; }
+.month-selector input { width: 112px; padding: 0; border: 0; color: #333; background: transparent; font: inherit; font-weight: 500; outline: none; cursor: pointer; }
 .balance-card { background: linear-gradient(135deg, #10B981 0%, #059669 100%); border-radius: 16px; padding: 20px; color: white; display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; box-shadow: 0 4px 12px rgba(16, 185, 129, 0.2); }
 .balance-info .label { font-size: 14px; opacity: 0.9; }
 .balance-info .amount { font-size: 28px; font-weight: 700; margin: 8px 0 0 0; }

@@ -1,7 +1,8 @@
-import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { CommonModule, isPlatformBrowser } from '@angular/common';
+import { Component, inject, PLATFORM_ID } from '@angular/core';
 import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 import { AuthService } from './core/services/auth';
+import { StorageService } from './core/services/storage';
 
 @Component({
   selector: 'app-root',
@@ -11,9 +12,16 @@ import { AuthService } from './core/services/auth';
   styleUrl: './app.css'
 })
 export class App {
+  private readonly platformId = inject(PLATFORM_ID);
   readonly user$: AuthService['user$'];
 
-  constructor(private readonly auth: AuthService) {
+  constructor(
+    private readonly auth: AuthService,
+    private readonly storage: StorageService,
+  ) {
     this.user$ = this.auth.user$;
+    if (isPlatformBrowser(this.platformId)) {
+      document.body.classList.toggle('dark-theme', this.storage.getItem<boolean>('darkMode') ?? false);
+    }
   }
 }
