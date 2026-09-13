@@ -73,15 +73,13 @@ export class TransactionService {
     return crypto.randomUUID();
   }
 
-  addTransaction(transaction: Omit<Transaction, 'id'>): void {
+  async addTransaction(transaction: Omit<Transaction, 'id'>): Promise<void> {
     const current = this.transactionsSubject.value;
     const newTransaction = { ...transaction, id: this.generateId() };
-    const updated = [...current, newTransaction];
-    this.transactionsSubject.next(updated);
-    this.persist(updated);
     const userId = this.auth.user?.id;
+
     if (userId && this.supabase.client) {
-      void this.supabase.client.from('transactions').insert({
+      const { error } = await this.supabase.client.from('transactions').insert({
         id: newTransaction.id,
         user_id: userId,
         amount: newTransaction.amount,
@@ -89,11 +87,16 @@ export class TransactionService {
         category_id: newTransaction.categoryId,
         date: newTransaction.date,
         note: newTransaction.note || null,
-      }).then(({ error }) => {
-        if (error) {
-          console.error('Không thể lưu giao dịch vào Supabase:', error.message);
-        }
       });
+      if (error) {
+        throw new Error(`Không thể lưu giao dịch vào Supabase: ${error.message}`);
+      }
+    }
+
+    const updated = [...current, newTransaction];
+    this.transactionsSubject.next(updated);
+    if (!userId || !this.supabase.client) {
+      this.persist(updated);
     }
   }
 

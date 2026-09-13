@@ -14,3 +14,5 @@ input, select, textarea { box-sizing: border-box; width: 100%; margin-top: 8px; 
 .amount-input input { margin: 0; padding-left: 0; border: 0; outline: 0; font-size: 22px; font-weight: 700; }
 .amount-input span, .optional { color: #94a3b8; font-size: 12px; font-weight: 400; }
 .submit-button { width: 100%; padding: 14px; margin-top: 12px; border: 0; border-radius: 11px; color: #fff; background: #1a56db; font-size: 15px; font-weight: 700; cursor: pointer; }
+.submit-button:disabled { opacity: .6; cursor: wait; }
+.error-message { padding: 10px; border-radius: 8px; color: #b91c1c; background: #fee2e2; font-size: 13px; }

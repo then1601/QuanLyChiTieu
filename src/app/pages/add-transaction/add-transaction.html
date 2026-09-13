@@ -37,6 +37,9 @@
       <textarea name="note" [(ngModel)]="note" rows="3" placeholder="Ví dụ: Ăn trưa cùng đồng nghiệp"></textarea>
     </label>
 
-    <button class="submit-button" type="submit">Lưu giao dịch</button>
+    <p class="error-message" *ngIf="errorMessage">{{ errorMessage }}</p>
+    <button class="submit-button" type="submit" [disabled]="saving">
+      {{ saving ? 'Đang lưu...' : 'Lưu giao dịch' }}
+    </button>
   </form>
 </section>

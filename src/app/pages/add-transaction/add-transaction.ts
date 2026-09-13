@@ -19,6 +19,8 @@ export class AddTransaction {
   categoryId = '';
   date = new Date().toISOString().slice(0, 10);
   note = '';
+  errorMessage = '';
+  saving = false;
 
   constructor(
     private readonly categoryService: CategoryService,
@@ -30,17 +32,26 @@ export class AddTransaction {
     return this.categoryService.getCategories().filter((category) => category.type === this.type);
   }
 
-  save(): void {
+  async save(): Promise<void> {
     if (!this.amount || this.amount <= 0 || !this.categoryId) {
       return;
     }
-    this.transactionService.addTransaction({
-      amount: this.amount,
-      type: this.type,
-      categoryId: this.categoryId,
-      date: new Date(`${this.date}T12:00:00`).toISOString(),
-      note: this.note.trim(),
-    });
-    void this.router.navigate(['/transactions']);
+
+    this.errorMessage = '';
+    this.saving = true;
+    try {
+      await this.transactionService.addTransaction({
+        amount: this.amount,
+        type: this.type,
+        categoryId: this.categoryId,
+        date: new Date(`${this.date}T12:00:00`).toISOString(),
+        note: this.note.trim(),
+      });
+      await this.router.navigate(['/transactions']);
+    } catch (error) {
+      this.errorMessage = error instanceof Error ? error.message : 'Không thể lưu giao dịch.';
+    } finally {
+      this.saving = false;
+    }
   }
 }
