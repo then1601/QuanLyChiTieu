@@ -40,8 +40,9 @@ export class CategoryService {
       this.categoriesSubject.next(defaultCategories);
       this.storage.setItem(this.STORAGE_KEY, defaultCategories);
     }
+  }
 
-    private async loadRemoteCategories(userId: string | null): Promise<void> {
+  private async loadRemoteCategories(userId: string | null): Promise<void> {
       if (!userId || !this.supabase.client) {
         this.categoriesSubject.next([]);
         return;
@@ -67,7 +68,7 @@ export class CategoryService {
       this.categoriesSubject.next(data as Category[]);
     }
 
-    private async createDefaultCategories(userId: string): Promise<void> {
+  private async createDefaultCategories(userId: string): Promise<void> {
       if (!this.supabase.client) {
         return;
       }
@@ -80,7 +81,7 @@ export class CategoryService {
       this.categoriesSubject.next((data ?? []) as Category[]);
     }
 
-    async addCategory(name: string, type: Category['type']): Promise<void> {
+  async addCategory(name: string, type: Category['type']): Promise<void> {
       const category: Category = {
         id: crypto.randomUUID(),
         name: name.trim(),
@@ -108,7 +109,7 @@ export class CategoryService {
       this.storage.setItem(this.STORAGE_KEY, updated);
     }
 
-    private getDefaultCategories(): Category[] {
+  private getDefaultCategories(): Category[] {
       return [
         { id: '1', name: 'Tiền ăn', icon: 'restaurant', color: '#FFA726', type: 'expense' },
         { id: '2', name: 'Đi chơi', icon: 'sports_esports', color: '#AB47BC', type: 'expense' },
@@ -116,7 +117,6 @@ export class CategoryService {
         { id: '4', name: 'Mua sắm', icon: 'shopping_cart', color: '#FFCA28', type: 'expense' },
         { id: '5', name: 'Lương', icon: 'school', color: '#66BB6A', type: 'income' },
       ];
-    }
   }
 
   getCategoryById(id: string): Category | undefined {
