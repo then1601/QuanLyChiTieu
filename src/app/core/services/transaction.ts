@@ -76,12 +76,20 @@ export class TransactionService {
   async addTransaction(transaction: Omit<Transaction, 'id'>): Promise<void> {
     const current = this.transactionsSubject.value;
     const newTransaction = { ...transaction, id: this.generateId() };
-    const userId = this.auth.user?.id;
+    let userId = this.auth.user?.id;
 
-    if (userId && this.supabase.client) {
+    if (this.supabase.client) {
+      const { data: sessionData, error: sessionError } = await this.supabase.client.auth.getSession();
+      if (sessionError) {
+        throw new Error(`Không thể xác thực phiên đăng nhập: ${sessionError.message}`);
+      }
+      userId = sessionData.session?.user.id;
+      if (!userId) {
+        throw new Error('Phiên đăng nhập đã hết hạn. Vui lòng đăng nhập lại.');
+      }
+
       const { error } = await this.supabase.client.from('transactions').insert({
         id: newTransaction.id,
-        user_id: userId,
         amount: newTransaction.amount,
         type: newTransaction.type,
         category_id: newTransaction.categoryId,
