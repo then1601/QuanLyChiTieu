@@ -1,3 +1,56 @@
+create table public.profiles (
+  id uuid primary key references auth.users(id) on delete cascade,
+  username text not null unique,
+  created_at timestamptz not null default now()
+);
+
+alter table public.profiles enable row level security;
+
+create policy "Users can read their own profile"
+  on public.profiles for select
+  to authenticated
+  using ((select auth.uid()) = id);
+
+create policy "Users can create their own profile"
+  on public.profiles for insert
+  to authenticated
+  with check ((select auth.uid()) = id);
+
+create or replace function public.get_auth_email_by_username(p_username text)
+returns text
+language sql
+security definer
+set search_path = public, auth
+as $$
+  select u.email
+  from auth.users as u
+  join public.profiles as p on p.id = u.id
+  where p.username = lower(trim(p_username))
+  limit 1;
+$$;
+
+revoke all on function public.get_auth_email_by_username(text) from public;
+grant execute on function public.get_auth_email_by_username(text) to anon, authenticated;
+
+create or replace function public.handle_new_user()
+returns trigger
+language plpgsql
+security definer set search_path = public
+as $$
+begin
+  insert into public.profiles (id, username)
+  values (new.id, lower(trim(new.raw_user_meta_data ->> 'username')))
+  on conflict (id) do update
+    set username = excluded.username;
+  return new;
+end;
+$$;
+
+drop trigger if exists on_auth_user_created on auth.users;
+create trigger on_auth_user_created
+  after insert or update of raw_user_meta_data on auth.users
+  for each row execute procedure public.handle_new_user();
+
 create table public.transactions (
   id uuid primary key default gen_random_uuid(),
   user_id uuid not null default auth.uid() references auth.users(id) on delete cascade,

@@ -16,7 +16,9 @@ import { Category } from '../../core/models/category';
   styleUrls: ['./home.css']
 })
 export class HomeComponent {
-  selectedMonth = new Date().toISOString().slice(0, 7);
+  filterDay = '';
+  filterMonth = '';
+  filterYear = '';
 
   constructor(
     private transactionService: TransactionService,
@@ -24,8 +26,16 @@ export class HomeComponent {
   ) {}
 
   get monthlyTransactions(): Transaction[] {
-    return this.transactionService.getTransactions()
-      .filter((transaction) => transaction.date.slice(0, 7) === this.selectedMonth);
+    const now = new Date();
+    const year = this.filterYear || String(now.getFullYear());
+    const month = this.filterMonth || (this.filterYear ? '' : String(now.getMonth() + 1).padStart(2, '0'));
+    const day = this.filterDay ? this.filterDay.padStart(2, '0') : '';
+    return this.transactionService.getTransactions().filter((transaction) => {
+      const date = new Date(transaction.date);
+      return String(date.getFullYear()) === year
+        && (!month || String(date.getMonth() + 1).padStart(2, '0') === month)
+        && (!day || String(date.getDate()).padStart(2, '0') === day);
+    });
   }
 
   get recentTransactions(): Transaction[] {

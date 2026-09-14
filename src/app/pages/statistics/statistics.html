@@ -7,6 +7,12 @@
     <span class="material-icons header-icon">insights</span>
   </header>
 
+  <div class="date-filter">
+    <label>Ngày<input type="number" min="1" max="31" [(ngModel)]="filterDay" placeholder="DD"></label>
+    <label>Tháng<input type="number" min="1" max="12" [(ngModel)]="filterMonth" placeholder="MM"></label>
+    <label>Năm<input type="number" min="2000" max="2100" [(ngModel)]="filterYear" placeholder="YYYY"></label>
+  </div>
+
   <div class="summary-card">
     <span>Chi tiêu tháng này</span>
     <strong>{{ summary.totalExpense | appCurrency:'expense' }}</strong>
@@ -21,7 +27,20 @@
   </div>
 
   <section class="section-card">
-    <h2>Chi tiêu theo danh mục</h2>
+    <div class="section-title">
+      <h2>Chi tiêu theo danh mục</h2>
+      <select [(ngModel)]="chartMode" aria-label="Dạng biểu đồ">
+        <option value="pie">Biểu tròn</option>
+        <option value="bar">Biểu cột</option>
+      </select>
+    </div>
+    <div *ngIf="chartMode === 'pie'" class="pie-chart" [style.background]="pieGradient"></div>
+    <div *ngIf="chartMode === 'bar'" class="bar-chart">
+      <div class="bar-item" *ngFor="let category of categoryBreakdown">
+        <div class="bar-label"><span>{{ category.name }}</span><strong>{{ category.amount | appCurrency:'expense' }}</strong></div>
+        <div class="bar-track"><span [style.width.%]="category.amount / maxCategoryAmount * 100" [style.background]="category.color"></span></div>
+      </div>
+    </div>
     <div class="category-row" *ngFor="let category of categoryBreakdown">
       <div class="category-info">
         <span class="dot" [style.background]="category.color"></span>

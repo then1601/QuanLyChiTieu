@@ -17,7 +17,7 @@ export class TransactionService {
     private readonly supabase: SupabaseService,
   ) {
     this.auth.user$.subscribe((user) => {
-      if (this.supabase.isConfigured) {
+      if (this.supabase.isConfigured && !this.auth.isLocalAuth) {
         void this.loadTransactionsFromSupabase(user?.id ?? null);
       } else {
         this.loadLocalTransactions();
@@ -78,7 +78,7 @@ export class TransactionService {
     const newTransaction = { ...transaction, id: this.generateId() };
     let userId = this.auth.user?.id;
 
-    if (this.supabase.client) {
+    if (this.supabase.client && !this.auth.isLocalAuth) {
       const { data: sessionData, error: sessionError } = await this.supabase.client.auth.getSession();
       if (sessionError) {
         throw new Error(`Không thể xác thực phiên đăng nhập: ${sessionError.message}`);
@@ -122,7 +122,7 @@ export class TransactionService {
     const updated = this.transactionsSubject.value.filter((transaction) => transaction.id !== id);
     this.transactionsSubject.next(updated);
     this.persist(updated);
-    if (this.auth.user?.id && this.supabase.client) {
+    if (this.auth.user?.id && this.supabase.client && !this.auth.isLocalAuth) {
       void this.supabase.client.from('transactions').delete().eq('id', id).eq('user_id', this.auth.user.id)
         .then(({ error }) => {
           if (error) {

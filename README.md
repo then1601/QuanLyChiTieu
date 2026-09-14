@@ -4,7 +4,13 @@
 
 1. Tạo project tại [supabase.com](https://supabase.com).
 2. Vào **SQL Editor**, chạy nội dung file `supabase/schema.sql`.
-3. Vào **Project Settings → API**, sao chép **Project URL** và **anon public key** vào `src/environments/environment.ts`:
+   Nếu project đã chạy schema cũ, chạy thêm migration trong `supabase/migrations/`.
+3. Vào **Authentication → Providers → Email**:
+   - Bật **Enable Email provider** để cho phép đăng ký.
+   - Tắt **Confirm email** để không gửi email xác nhận tới email nội bộ được tạo từ username.
+   
+   Hai tùy chọn này độc lập. Tắt Confirm email không có nghĩa là tắt Email provider. Nếu provider bị tắt, Supabase sẽ trả lỗi `Email signups are disabled`.
+4. Vào **Project Settings → API**, sao chép **Project URL** và **anon public key** vào `src/environments/environment.ts`:
 
 ```ts
 export const environment = {

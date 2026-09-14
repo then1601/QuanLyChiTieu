@@ -12,8 +12,9 @@ import { AuthService } from '../../core/services/auth';
   styleUrl: './login.css',
 })
 export class Login {
-  email = '';
+  username = '';
   password = '';
+  confirmPassword = '';
   isSignUp = false;
   loading = false;
   errorMessage = '';
@@ -22,7 +23,9 @@ export class Login {
   constructor(
     private readonly auth: AuthService,
     private readonly router: Router,
-  ) {}
+  ) {
+    this.username = this.auth.rememberedUsername;
+  }
 
   async submit(): Promise<void> {
     this.errorMessage = '';
@@ -31,10 +34,17 @@ export class Login {
 
     try {
       if (this.isSignUp) {
-        await this.auth.signUp(this.email.trim(), this.password);
-        this.successMessage = 'Đăng ký thành công. Hãy kiểm tra email để xác nhận tài khoản.';
+        if (this.password !== this.confirmPassword) {
+          throw new Error('Mật khẩu nhập lại không khớp.');
+        }
+        const signedIn = await this.auth.signUp(this.username.trim(), this.password);
+        if (signedIn) {
+          await this.router.navigate(['/home']);
+        } else {
+          this.successMessage = 'Đăng ký thành công. Vui lòng đăng nhập.';
+        }
       } else {
-        await this.auth.signIn(this.email.trim(), this.password);
+        await this.auth.signIn(this.username.trim(), this.password);
         await this.router.navigate(['/home']);
       }
     } catch (error) {

@@ -17,7 +17,7 @@ export class CategoryService {
     private readonly supabase: SupabaseService,
   ) {
     this.auth.user$.subscribe((user) => {
-      if (this.supabase.client) {
+      if (this.supabase.client && !this.auth.isLocalAuth) {
         void this.loadRemoteCategories(user?.id ?? null);
       } else {
         this.loadLocalCategories();
@@ -91,7 +91,7 @@ export class CategoryService {
       };
       const userId = this.auth.user?.id;
 
-      if (userId && this.supabase.client) {
+      if (userId && this.supabase.client && !this.auth.isLocalAuth) {
         const { data, error } = await this.supabase.client
           .from('categories')
           .insert({ ...category, user_id: userId })
