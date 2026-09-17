@@ -17,12 +17,15 @@ export class CategoryService {
     private readonly auth: AuthService,
     private readonly supabase: SupabaseService,
   ) {
-    this.auth.user$.subscribe((user) => {
-      if (this.supabase.client && !this.auth.isLocalAuth) {
-        void this.loadRemoteCategories(user?.id ?? null);
-      } else {
+    this.auth.user$.subscribe(() => {
+      void this.auth.ready.then(async () => {
+        const user = this.auth.user;
+        if (this.supabase.client && !this.auth.isLocalAuth) {
+          await this.loadRemoteCategories(user?.id ?? null);
+          return;
+        }
         this.loadLocalCategories();
-      }
+      });
     });
   }
 
@@ -82,7 +85,7 @@ export class CategoryService {
       this.setCategories((data ?? []) as Category[]);
     }
 
-  async addCategory(name: string, type: Category['type']): Promise<void> {
+  async addCategory(name: string, type: Category['type']): Promise<Category> {
       const category: Category = {
         id: crypto.randomUUID(),
         name: name.trim(),
@@ -102,12 +105,13 @@ export class CategoryService {
           throw new Error(`Không thể tạo danh mục: ${error.message}`);
         }
         this.setCategories([...this.categoriesSubject.value, data as Category]);
-        return;
+        return data as Category;
       }
 
       const updated = [...this.categoriesSubject.value, category];
       this.setCategories(updated);
       this.storage.setItem(this.STORAGE_KEY, updated);
+      return category;
     }
 
   private getDefaultCategories(): Category[] {

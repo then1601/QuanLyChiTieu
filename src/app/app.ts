@@ -14,6 +14,7 @@ import { StorageService } from './core/services/storage';
 export class App {
   private readonly platformId = inject(PLATFORM_ID);
   readonly user$: AuthService['user$'];
+  readonly authReady$: AuthService['ready$'];
 
   constructor(
     private readonly auth: AuthService,
@@ -21,6 +22,7 @@ export class App {
     private readonly router: Router,
   ) {
     this.user$ = this.auth.user$;
+    this.authReady$ = this.auth.ready$;
     if (isPlatformBrowser(this.platformId)) {
       document.body.classList.toggle('dark-theme', this.storage.getItem<boolean>('darkMode') ?? false);
     }

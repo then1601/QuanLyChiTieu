@@ -1,7 +1,7 @@
 <section class="page-container">
   <header class="page-header">
     <a routerLink="/home" class="back-button"><span class="material-icons">arrow_back</span></a>
-    <h1>Thêm giao dịch</h1>
+    <h1>{{ editId ? 'Sửa giao dịch' : 'Thêm giao dịch' }}</h1>
     <span class="header-spacer"></span>
   </header>
 
@@ -23,10 +23,18 @@
     </label>
 
     <label>Danh mục
-      <select name="categoryId" [(ngModel)]="categoryId" required>
+      <select name="categoryId" [(ngModel)]="categoryId">
         <option value="" disabled>Chọn danh mục</option>
         <option *ngFor="let category of availableCategories" [value]="category.id">{{ category.name }}</option>
       </select>
+      <div class="new-category">
+        <input
+          name="newCategoryName"
+          [(ngModel)]="newCategoryName"
+          maxlength="50"
+          placeholder="Hoặc nhập danh mục mới"
+          aria-label="Tên danh mục mới">
+      </div>
     </label>
 
     <label>Ngày giao dịch
@@ -39,7 +47,7 @@
 
     <p class="error-message" *ngIf="errorMessage">{{ errorMessage }}</p>
     <button class="submit-button" type="submit" [disabled]="saving">
-      {{ saving ? 'Đang lưu...' : 'Lưu giao dịch' }}
+      {{ saving ? 'Đang lưu...' : (editId ? 'Cập nhật giao dịch' : 'Lưu giao dịch') }}
     </button>
   </form>
 </section>

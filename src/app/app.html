@@ -1,4 +1,7 @@
 <main class="app-content">
+  @if (!(authReady$ | async)) {
+    <div class="auth-loading" role="status">Đang kiểm tra đăng nhập...</div>
+  }
   <router-outlet />
 </main>
 

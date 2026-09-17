@@ -18,6 +18,9 @@
   <div class="transaction-list" *ngIf="transactions.length; else empty">
     <div class="transaction-row" *ngFor="let transaction of transactions; trackBy: trackTransaction">
       <app-transaction-card [transaction]="transaction" [category]="getCategory(transaction.categoryId)" />
+      <a class="edit-button" [routerLink]="['/edit', transaction.id]" aria-label="Sửa giao dịch">
+        <span class="material-icons">edit</span>
+      </a>
       <button class="delete-button" (click)="deleteTransaction(transaction.id)" aria-label="Xóa giao dịch">
         <span class="material-icons">delete_outline</span>
       </button>

@@ -10,6 +10,8 @@
 .type-switch .material-icons { vertical-align: middle; font-size: 18px; }
 label { display: block; margin: 16px 0; color: #334155; font-size: 14px; font-weight: 600; }
 input, select, textarea { box-sizing: border-box; width: 100%; margin-top: 8px; padding: 13px; border: 1px solid #e2e8f0; border-radius: 10px; color: #1e293b; background: #fff; font: inherit; }
+.new-category { display: flex; gap: 8px; }
+.new-category input { flex: 1; min-width: 0; }
 .amount-input { display: flex; align-items: center; gap: 8px; margin-top: 8px; padding: 0 13px; border: 1px solid #e2e8f0; border-radius: 10px; }
 .amount-input input { margin: 0; padding-left: 0; border: 0; outline: 0; font-size: 22px; font-weight: 700; }
 .amount-input span, .optional { color: #94a3b8; font-size: 12px; font-weight: 400; }

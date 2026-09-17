@@ -3,6 +3,14 @@
   padding-bottom: 78px;
 }
 
+.auth-loading {
+  display: grid;
+  min-height: 100vh;
+  place-items: center;
+  color: #64748b;
+  font-size: 15px;
+}
+
 .bottom-nav {
   position: fixed;
   right: 0;

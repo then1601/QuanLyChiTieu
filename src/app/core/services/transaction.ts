@@ -16,12 +16,15 @@ export class TransactionService {
     private readonly auth: AuthService,
     private readonly supabase: SupabaseService,
   ) {
-    this.auth.user$.subscribe((user) => {
-      if (this.supabase.isConfigured && !this.auth.isLocalAuth) {
-        void this.loadTransactionsFromSupabase(user?.id ?? null);
-      } else {
+    this.auth.user$.subscribe(() => {
+      void this.auth.ready.then(async () => {
+        const user = this.auth.user;
+        if (this.supabase.isConfigured && !this.auth.isLocalAuth) {
+          await this.loadTransactionsFromSupabase(user?.id ?? null);
+          return;
+        }
         this.loadLocalTransactions();
-      }
+      });
     });
   }
 
@@ -83,6 +86,7 @@ export class TransactionService {
       if (sessionError) {
         throw new Error(`Không thể xác thực phiên đăng nhập: ${sessionError.message}`);
       }
+
       userId = sessionData.session?.user.id;
       if (!userId) {
         throw new Error('Phiên đăng nhập đã hết hạn. Vui lòng đăng nhập lại.');
@@ -104,6 +108,36 @@ export class TransactionService {
     const updated = [...current, newTransaction];
     this.transactionsSubject.next(updated);
     if (!userId || !this.supabase.client) {
+      this.persist(updated);
+    }
+  }
+
+  async updateTransaction(id: string, transaction: Omit<Transaction, 'id'>): Promise<void> {
+    const current = this.transactionsSubject.value;
+    if (!current.some((item) => item.id === id)) {
+      throw new Error('Không tìm thấy giao dịch cần sửa.');
+    }
+
+    if (this.supabase.client && !this.auth.isLocalAuth) {
+      const { error } = await this.supabase.client
+        .from('transactions')
+        .update({
+          amount: transaction.amount,
+          type: transaction.type,
+          category_id: transaction.categoryId,
+          date: transaction.date,
+          note: transaction.note || null,
+        })
+        .eq('id', id)
+        .eq('user_id', this.auth.user?.id ?? '');
+      if (error) {
+        throw new Error(`Không thể cập nhật giao dịch trên Supabase: ${error.message}`);
+      }
+    }
+
+    const updated = current.map((item) => item.id === id ? { ...transaction, id } : item);
+    this.transactionsSubject.next(updated);
+    if (!this.auth.user?.id || !this.supabase.client) {
       this.persist(updated);
     }
   }

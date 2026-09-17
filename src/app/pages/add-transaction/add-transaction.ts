@@ -1,7 +1,8 @@
-import { Component } from '@angular/core';
+import { Component, DestroyRef, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { Router, RouterLink } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { CategoryService } from '../../core/services/category';
 import { TransactionService } from '../../core/services/transaction';
 import { TransactionType } from '../../core/models/category';
@@ -21,32 +22,65 @@ export class AddTransaction {
   note = '';
   errorMessage = '';
   saving = false;
+  newCategoryName = '';
+  readonly editId: string | null;
+  private readonly destroyRef = inject(DestroyRef);
+  private transactionLoaded = false;
 
   constructor(
     private readonly categoryService: CategoryService,
     private readonly transactionService: TransactionService,
     private readonly router: Router,
-  ) {}
+    private readonly route: ActivatedRoute,
+  ) {
+    this.editId = this.route.snapshot.paramMap.get('id');
+    if (this.editId) {
+      this.transactionService.transactions$
+        .pipe(takeUntilDestroyed(this.destroyRef))
+        .subscribe((transactions) => {
+          const transaction = transactions.find((item) => item.id === this.editId);
+          if (transaction && !this.transactionLoaded) {
+            this.type = transaction.type;
+            this.amount = transaction.amount;
+            this.categoryId = transaction.categoryId;
+            this.date = transaction.date.slice(0, 10);
+            this.note = transaction.note ?? '';
+            this.transactionLoaded = true;
+          }
+        });
+    }
+  }
 
   get availableCategories() {
     return this.categoryService.getCategories().filter((category) => category.type === this.type);
   }
 
   async save(): Promise<void> {
-    if (!this.amount || this.amount <= 0 || !this.categoryId) {
+    const newCategoryName = this.newCategoryName.trim();
+    if (!this.amount || this.amount <= 0 || (!this.categoryId && !newCategoryName)) {
       return;
     }
 
     this.errorMessage = '';
     this.saving = true;
     try {
-      await this.transactionService.addTransaction({
+      if (newCategoryName) {
+        const category = await this.categoryService.addCategory(newCategoryName, this.type);
+        this.categoryId = category.id;
+      }
+
+      const transaction = {
         amount: this.amount,
         type: this.type,
         categoryId: this.categoryId,
         date: new Date(`${this.date}T12:00:00`).toISOString(),
         note: this.note.trim(),
-      });
+      };
+      if (this.editId) {
+        await this.transactionService.updateTransaction(this.editId, transaction);
+      } else {
+        await this.transactionService.addTransaction(transaction);
+      }
       await this.router.navigate(['/transactions']);
     } catch (error) {
       this.errorMessage = error instanceof Error ? error.message : 'Không thể lưu giao dịch.';

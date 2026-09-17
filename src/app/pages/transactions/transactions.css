@@ -9,6 +9,7 @@ h1 { margin: 5px 0 0; color: #1e293b; font-size: 26px; }
 .transaction-list { overflow: hidden; border-radius: 16px; background: #fff; }
 .transaction-row { display: flex; align-items: center; padding: 0 12px 0 16px; }
 .transaction-row app-transaction-card { flex: 1; }
+.edit-button { color: #1a56db; text-decoration: none; }
 .delete-button { border: 0; color: #ef5350; background: transparent; cursor: pointer; }
 .empty-state { padding: 60px 24px; text-align: center; color: #64748b; }
 .empty-state .material-icons { color: #94a3b8; font-size: 54px; }

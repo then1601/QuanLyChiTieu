@@ -9,7 +9,9 @@ import { environment } from '../../../environments/environment';
 export class AuthService {
   private readonly usernameKey = 'rememberedUsername';
   private readonly userSubject = new BehaviorSubject<User | null>(null);
+  private readonly readySubject = new BehaviorSubject(false);
   readonly user$ = this.userSubject.asObservable();
+  readonly ready$ = this.readySubject.asObservable();
   readonly ready: Promise<void>;
 
   constructor(
@@ -101,20 +103,34 @@ export class AuthService {
 
   private async initialize(): Promise<void> {
     if (!this.supabase.client) {
+      this.readySubject.next(true);
       return;
     }
     const client = this.requireClient();
-    const { data, error } = await client.auth.getSession();
-    if (error) {
-      this.userSubject.next(null);
-      console.error('Không thể khôi phục phiên đăng nhập:', error.message);
-      return;
-    }
+    try {
+      const { data, error } = await this.withTimeout(
+        client.auth.getSession(),
+        'Không thể kiểm tra phiên đăng nhập. Vui lòng đăng nhập lại.',
+      );
+      if (error) {
+        this.userSubject.next(null);
+        console.error('Không thể khôi phục phiên đăng nhập:', error.message);
+        return;
+      }
 
-    this.userSubject.next(data.session?.user ?? null);
-    client.auth.onAuthStateChange((event: AuthChangeEvent, session: Session | null) => {
-      this.userSubject.next(session?.user ?? null);
-    });
+      this.userSubject.next(data.session?.user ?? null);
+      client.auth.onAuthStateChange((event: AuthChangeEvent, session: Session | null) => {
+        this.userSubject.next(session?.user ?? null);
+      });
+    } catch (error) {
+      this.userSubject.next(null);
+      console.error(
+        'Không thể khôi phục phiên đăng nhập:',
+        error instanceof Error ? error.message : error,
+      );
+    } finally {
+      this.readySubject.next(true);
+    }
   }
 
   private rememberUsername(username: string): void {
