@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
+import { toSignal } from '@angular/core/rxjs-interop';
 import { TransactionService } from '../../core/services/transaction';
 import { CategoryService } from '../../core/services/category';
 import { Transaction } from '../../core/models/transaction';
@@ -15,19 +16,24 @@ import { TransactionCardComponent } from '../../shared/components/transaction-ca
 })
 export class Transactions {
   filter: 'all' | 'income' | 'expense' = 'all';
+  private readonly transactionState;
+  private readonly categoryState;
 
   constructor(
     private readonly transactionService: TransactionService,
     private readonly categoryService: CategoryService,
-  ) {}
+  ) {
+    this.transactionState = toSignal(this.transactionService.transactions$, { initialValue: [] });
+    this.categoryState = toSignal(this.categoryService.categories$, { initialValue: [] });
+  }
 
   get transactions(): Transaction[] {
-    const transactions = this.transactionService.getTransactions();
+    const transactions = this.transactionState();
     return this.filter === 'all' ? transactions : transactions.filter((item) => item.type === this.filter);
   }
 
   getCategory(id: string) {
-    return this.categoryService.getCategoryById(id);
+    return this.categoryState().find((category) => category.id === id);
   }
 
   deleteTransaction(id: string): void {

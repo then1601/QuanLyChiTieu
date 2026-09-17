@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { toSignal } from '@angular/core/rxjs-interop';
 import { CategoryService } from '../../core/services/category';
 import { TransactionService } from '../../core/services/transaction';
 import { TransactionType } from '../../core/models/category';
@@ -25,6 +26,7 @@ export class AddTransaction {
   newCategoryName = '';
   readonly editId: string | null;
   private readonly destroyRef = inject(DestroyRef);
+  private readonly categoryState;
   private transactionLoaded = false;
 
   constructor(
@@ -33,6 +35,7 @@ export class AddTransaction {
     private readonly router: Router,
     private readonly route: ActivatedRoute,
   ) {
+    this.categoryState = toSignal(this.categoryService.categories$, { initialValue: [] });
     this.editId = this.route.snapshot.paramMap.get('id');
     if (this.editId) {
       this.transactionService.transactions$
@@ -52,7 +55,7 @@ export class AddTransaction {
   }
 
   get availableCategories() {
-    return this.categoryService.getCategories().filter((category) => category.type === this.type);
+    return this.categoryState().filter((category) => category.type === this.type);
   }
 
   async save(): Promise<void> {

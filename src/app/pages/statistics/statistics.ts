@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { toSignal } from '@angular/core/rxjs-interop';
 import { CategoryService } from '../../core/services/category';
 import { TransactionService } from '../../core/services/transaction';
 import { Category } from '../../core/models/category';
@@ -29,14 +30,19 @@ export class Statistics {
   private cachedCategories: Category[] | null = null;
   private cachedBreakdownTransactions: Transaction[] | null = null;
   private cachedBreakdown: Array<Category & { amount: number; percent: number }> = [];
+  private readonly transactionState;
+  private readonly categoryState;
 
   constructor(
     private readonly categoryService: CategoryService,
     private readonly transactionService: TransactionService,
-  ) {}
+  ) {
+    this.transactionState = toSignal(this.transactionService.transactions$, { initialValue: [] });
+    this.categoryState = toSignal(this.categoryService.categories$, { initialValue: [] });
+  }
 
   get filteredTransactions() {
-    const transactions = this.transactionService.getTransactions();
+    const transactions = this.transactionState();
     const now = new Date();
     const yearInput = this.filterValue(this.appliedFilterYear);
     const monthInput = this.filterValue(this.appliedFilterMonth);
@@ -78,7 +84,7 @@ export class Statistics {
 
   get categoryBreakdown(): Array<Category & { amount: number; percent: number }> {
     const filteredTransactions = this.filteredTransactions;
-    const categories = this.categoryService.getCategories();
+    const categories = this.categoryState();
     if (this.cachedBreakdownTransactions === filteredTransactions && this.cachedCategories === categories) {
       return this.cachedBreakdown;
     }

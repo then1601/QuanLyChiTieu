@@ -3,6 +3,7 @@ import { isPlatformBrowser } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { toSignal } from '@angular/core/rxjs-interop';
 import { StorageService } from '../../core/services/storage';
 import { AuthService } from '../../core/services/auth';
 import { Router } from '@angular/router';
@@ -24,6 +25,7 @@ export class Settings {
   newCategoryType: TransactionType = 'expense';
   categoryError = '';
   categorySaving = false;
+  private readonly categoryState;
 
   constructor(
     private readonly storage: StorageService,
@@ -31,6 +33,7 @@ export class Settings {
     private readonly router: Router,
     private readonly categoryService: CategoryService,
   ) {
+    this.categoryState = toSignal(this.categoryService.categories$, { initialValue: [] });
     if (isPlatformBrowser(this.platformId)) {
       this.darkMode = this.storage.getItem<boolean>(this.themeStorageKey) ?? false;
       this.applyTheme();
@@ -38,7 +41,7 @@ export class Settings {
   }
 
   get categories() {
-    return this.categoryService.getCategories();
+    return this.categoryState();
   }
 
   async addCategory(): Promise<void> {
