@@ -72,6 +72,12 @@ create table public.categories (
   created_at timestamptz not null default now()
 );
 
+create index if not exists transactions_user_date_idx
+  on public.transactions (user_id, date desc);
+
+create index if not exists categories_user_idx
+  on public.categories (user_id);
+
 alter table public.categories enable row level security;
 
 create policy "Users can read their own categories"

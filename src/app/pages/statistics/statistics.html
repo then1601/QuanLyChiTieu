@@ -7,11 +7,12 @@
     <span class="material-icons header-icon">insights</span>
   </header>
 
-  <div class="date-filter">
-    <label>Ngày<input type="number" min="1" max="31" [(ngModel)]="filterDay" placeholder="DD"></label>
-    <label>Tháng<input type="number" min="1" max="12" [(ngModel)]="filterMonth" placeholder="MM"></label>
-    <label>Năm<input type="number" min="2000" max="2100" [(ngModel)]="filterYear" placeholder="YYYY"></label>
-  </div>
+  <form class="date-filter" (ngSubmit)="applyFilters()">
+    <label>Ngày<input name="filterDay" type="number" min="1" max="31" [(ngModel)]="filterDay" placeholder="DD"></label>
+    <label>Tháng<input name="filterMonth" type="number" min="1" max="12" [(ngModel)]="filterMonth" placeholder="MM"></label>
+    <label>Năm<input name="filterYear" type="number" min="2000" max="2100" [(ngModel)]="filterYear" placeholder="YYYY"></label>
+    <button class="filter-submit" type="submit">Lọc</button>
+  </form>
 
   <div class="summary-card">
     <span>Chi tiêu tháng này</span>

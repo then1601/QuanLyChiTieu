@@ -39,7 +39,7 @@
     </form>
     <p class="category-error" *ngIf="categoryError">{{ categoryError }}</p>
     <div class="category-list">
-      <span class="category-chip" *ngFor="let category of categories">
+      <span class="category-chip" *ngFor="let category of categories; trackBy: trackCategory">
         <i class="material-icons">{{ category.icon }}</i>
         {{ category.name }}
       </span>
@@ -59,5 +59,5 @@
     <i class="material-icons">chevron_right</i>
   </button>
 
-  <p class="version">Quản lý chi tiêu · Phiên bản 1.0.0</p>
+  <p class="version">Nhìn cái chó gì</p>
 </section>

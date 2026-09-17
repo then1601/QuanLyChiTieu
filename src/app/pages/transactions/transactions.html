@@ -16,7 +16,7 @@
   </div>
 
   <div class="transaction-list" *ngIf="transactions.length; else empty">
-    <div class="transaction-row" *ngFor="let transaction of transactions">
+    <div class="transaction-row" *ngFor="let transaction of transactions; trackBy: trackTransaction">
       <app-transaction-card [transaction]="transaction" [category]="getCategory(transaction.categoryId)" />
       <button class="delete-button" (click)="deleteTransaction(transaction.id)" aria-label="Xóa giao dịch">
         <span class="material-icons">delete_outline</span>

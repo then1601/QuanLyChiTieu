@@ -7,11 +7,12 @@
     <span class="material-icons">settings</span>
   </header>
 
-  <div class="date-filter">
-    <label>Ngày<input type="number" min="1" max="31" [(ngModel)]="filterDay" placeholder="DD"></label>
-    <label>Tháng<input type="number" min="1" max="12" [(ngModel)]="filterMonth" placeholder="MM"></label>
-    <label>Năm<input type="number" min="2000" max="2100" [(ngModel)]="filterYear" placeholder="YYYY"></label>
-  </div>
+  <form class="date-filter" (ngSubmit)="applyFilters()">
+    <label>Ngày<input name="filterDay" type="number" min="1" max="31" [(ngModel)]="filterDay" placeholder="DD"></label>
+    <label>Tháng<input name="filterMonth" type="number" min="1" max="12" [(ngModel)]="filterMonth" placeholder="MM"></label>
+    <label>Năm<input name="filterYear" type="number" min="2000" max="2100" [(ngModel)]="filterYear" placeholder="YYYY"></label>
+    <button class="filter-submit" type="submit">Lọc</button>
+  </form>
 
   <div class="balance-card">
     <div class="balance-info">
@@ -39,7 +40,7 @@
     </div>
     <div class="transaction-list">
       <app-transaction-card 
-        *ngFor="let tx of recentTransactions" 
+        *ngFor="let tx of recentTransactions; trackBy: trackTransaction"
         [transaction]="tx" 
         [category]="getCategory(tx.categoryId)">
       </app-transaction-card>

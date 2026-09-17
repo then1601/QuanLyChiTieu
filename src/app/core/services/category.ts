@@ -9,6 +9,7 @@ import { SupabaseService } from './supabase';
 export class CategoryService {
   private readonly STORAGE_KEY = 'categories';
   private categoriesSubject = new BehaviorSubject<Category[]>([]);
+  private readonly categoryIndex = new Map<string, Category>();
   categories$ = this.categoriesSubject.asObservable();
 
   constructor(
@@ -28,7 +29,7 @@ export class CategoryService {
   private loadLocalCategories(): void {
     const saved = this.storage.getItem<Category[]>(this.STORAGE_KEY);
     if (saved && saved.length > 0) {
-      this.categoriesSubject.next(saved);
+      this.setCategories(saved);
     } else {
       const defaultCategories: Category[] = [
         { id: '1', name: 'Tiền ăn', icon: 'restaurant', color: '#FFA726', type: 'expense' },
@@ -37,14 +38,14 @@ export class CategoryService {
         { id: '4', name: 'Mua sắm', icon: 'shopping_cart', color: '#FFCA28', type: 'expense' },
         { id: '5', name: 'Lương', icon: 'school', color: '#66BB6A', type: 'income' }
       ];
-      this.categoriesSubject.next(defaultCategories);
+      this.setCategories(defaultCategories);
       this.storage.setItem(this.STORAGE_KEY, defaultCategories);
     }
   }
 
   private async loadRemoteCategories(userId: string | null): Promise<void> {
       if (!userId || !this.supabase.client) {
-        this.categoriesSubject.next([]);
+        this.setCategories([]);
         return;
       }
 
@@ -65,7 +66,7 @@ export class CategoryService {
         return;
       }
 
-      this.categoriesSubject.next(data as Category[]);
+      this.setCategories(data as Category[]);
     }
 
   private async createDefaultCategories(userId: string): Promise<void> {
@@ -78,7 +79,7 @@ export class CategoryService {
         console.error('Không thể tạo danh mục mặc định:', error.message);
         return;
       }
-      this.categoriesSubject.next((data ?? []) as Category[]);
+      this.setCategories((data ?? []) as Category[]);
     }
 
   async addCategory(name: string, type: Category['type']): Promise<void> {
@@ -100,12 +101,12 @@ export class CategoryService {
         if (error) {
           throw new Error(`Không thể tạo danh mục: ${error.message}`);
         }
-        this.categoriesSubject.next([...this.categoriesSubject.value, data as Category]);
+        this.setCategories([...this.categoriesSubject.value, data as Category]);
         return;
       }
 
       const updated = [...this.categoriesSubject.value, category];
-      this.categoriesSubject.next(updated);
+      this.setCategories(updated);
       this.storage.setItem(this.STORAGE_KEY, updated);
     }
 
@@ -120,10 +121,18 @@ export class CategoryService {
   }
 
   getCategoryById(id: string): Category | undefined {
-    return this.categoriesSubject.value.find(c => c.id === id);
+    return this.categoryIndex.get(id);
   }
 
   getCategories(): Category[] {
     return this.categoriesSubject.value;
+  }
+
+  private setCategories(categories: Category[]): void {
+    this.categoryIndex.clear();
+    for (const category of categories) {
+      this.categoryIndex.set(category.id, category);
+    }
+    this.categoriesSubject.next(categories);
   }
 }

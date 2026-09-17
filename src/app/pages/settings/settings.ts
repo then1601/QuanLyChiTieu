@@ -7,7 +7,7 @@ import { StorageService } from '../../core/services/storage';
 import { AuthService } from '../../core/services/auth';
 import { Router } from '@angular/router';
 import { CategoryService } from '../../core/services/category';
-import { TransactionType } from '../../core/models/category';
+import { Category, TransactionType } from '../../core/models/category';
 
 @Component({
   selector: 'app-settings',
@@ -80,5 +80,9 @@ export class Settings {
   async logout(): Promise<void> {
     await this.auth.signOut();
     await this.router.navigate(['/login']);
+  }
+
+  trackCategory(_: number, category: Category): string {
+    return category.id;
   }
 }

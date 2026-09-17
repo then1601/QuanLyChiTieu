@@ -33,4 +33,8 @@ export class Transactions {
   deleteTransaction(id: string): void {
     this.transactionService.deleteTransaction(id);
   }
+
+  trackTransaction(_: number, transaction: Transaction): string {
+    return transaction.id;
+  }
 }
