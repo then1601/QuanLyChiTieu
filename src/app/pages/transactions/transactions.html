@@ -10,9 +10,14 @@
   </header>
 
   <div class="filter-bar">
-    <button [class.active]="filter === 'all'" (click)="filter = 'all'">Tất cả</button>
-    <button [class.active]="filter === 'income'" (click)="filter = 'income'">Khoản thu</button>
-    <button [class.active]="filter === 'expense'" (click)="filter = 'expense'">Khoản chi</button>
+    <button [class.active]="filterCategoryId === 'all'" (click)="filterCategoryId = 'all'">Tất cả</button>
+    <button
+      *ngFor="let category of categories"
+      [class.active]="filterCategoryId === category.id"
+      (click)="filterCategoryId = category.id">
+      <span class="material-icons">{{ category.icon }}</span>
+      {{ category.name }}
+    </button>
   </div>
 
   <div class="transaction-list" *ngIf="transactions.length; else empty">

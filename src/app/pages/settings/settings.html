@@ -39,10 +39,19 @@
     </form>
     <p class="category-error" *ngIf="categoryError">{{ categoryError }}</p>
     <div class="category-list">
-      <span class="category-chip" *ngFor="let category of categories; trackBy: trackCategory">
+      <div class="category-chip" *ngFor="let category of categories; trackBy: trackCategory">
         <i class="material-icons">{{ category.icon }}</i>
-        {{ category.name }}
-      </span>
+        <span>{{ category.name }}</span>
+        <select
+          [name]="'categoryType-' + category.id"
+          [ngModel]="category.type"
+          (ngModelChange)="updateCategoryType(category, $event)"
+          [disabled]="categoryUpdatingId === category.id"
+          [attr.aria-label]="'Loại danh mục ' + category.name">
+          <option value="expense">Khoản chi</option>
+          <option value="income">Khoản thu</option>
+        </select>
+      </div>
     </div>
   </section>
 

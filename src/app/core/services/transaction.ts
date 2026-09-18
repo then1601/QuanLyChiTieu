@@ -119,7 +119,7 @@ export class TransactionService {
     }
 
     if (this.supabase.client && !this.auth.isLocalAuth) {
-      const { error } = await this.supabase.client
+      const { data, error } = await this.supabase.client
         .from('transactions')
         .update({
           amount: transaction.amount,
@@ -129,9 +129,14 @@ export class TransactionService {
           note: transaction.note || null,
         })
         .eq('id', id)
-        .eq('user_id', this.auth.user?.id ?? '');
+        .eq('user_id', this.auth.user?.id ?? '')
+        .select('id, amount, type, category_id, date, note')
+        .single();
       if (error) {
         throw new Error(`Không thể cập nhật giao dịch trên Supabase: ${error.message}`);
+      }
+      if (!data || String(data.category_id) !== transaction.categoryId) {
+        throw new Error('Supabase không xác nhận danh mục giao dịch mới đã được lưu.');
       }
     }
 

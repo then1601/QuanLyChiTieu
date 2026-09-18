@@ -27,3 +27,4 @@ h1 { margin: 5px 0 0; color: #1e293b; font-size: 26px; }
 .category-list { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 14px; }
 .category-chip { display: inline-flex; align-items: center; gap: 5px; padding: 7px 9px; border-radius: 16px; color: #475569; background: #f1f5f9; font-size: 12px; }
 .category-chip i { font-size: 16px; }
+.category-chip select { padding: 3px 5px; border: 1px solid #cbd5e1; border-radius: 6px; color: #475569; background: #fff; font: inherit; }

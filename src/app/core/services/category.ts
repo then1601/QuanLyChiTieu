@@ -114,6 +114,38 @@ export class CategoryService {
       return category;
     }
 
+  async updateCategoryType(id: string, type: Category['type']): Promise<void> {
+      const category = this.categoryIndex.get(id);
+      if (!category) {
+        throw new Error('Không tìm thấy danh mục cần cập nhật.');
+      }
+
+      if (this.supabase.client && !this.auth.isLocalAuth) {
+        const { data, error } = await this.supabase.client
+          .from('categories')
+          .update({ type })
+          .eq('id', id)
+          .eq('user_id', this.auth.user?.id ?? '')
+          .select('id, type')
+          .single();
+        if (error) {
+          throw new Error(`Không thể cập nhật danh mục trên Supabase: ${error.message}`);
+        }
+        if (data.type !== type) {
+          throw new Error(
+            'Supabase không xác nhận loại danh mục mới đã được lưu.',
+          );
+        }
+      }
+
+      const updated = this.categoriesSubject.value.map((item) =>
+        item.id === id ? { ...item, type } : item);
+      this.setCategories(updated);
+      if (!this.auth.user?.id || !this.supabase.client || this.auth.isLocalAuth) {
+        this.storage.setItem(this.STORAGE_KEY, updated);
+      }
+    }
+
   private getDefaultCategories(): Category[] {
       return [
         { id: '1', name: 'Tiền ăn', icon: 'restaurant', color: '#FFA726', type: 'expense' },

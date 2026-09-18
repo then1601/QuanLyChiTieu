@@ -5,6 +5,7 @@ import { toSignal } from '@angular/core/rxjs-interop';
 import { TransactionService } from '../../core/services/transaction';
 import { CategoryService } from '../../core/services/category';
 import { Transaction } from '../../core/models/transaction';
+import { Category } from '../../core/models/category';
 import { TransactionCardComponent } from '../../shared/components/transaction-card/transaction-card';
 
 @Component({
@@ -15,7 +16,7 @@ import { TransactionCardComponent } from '../../shared/components/transaction-ca
   styleUrl: './transactions.css',
 })
 export class Transactions {
-  filter: 'all' | 'income' | 'expense' = 'all';
+  filterCategoryId = 'all';
   private readonly transactionState;
   private readonly categoryState;
 
@@ -29,7 +30,13 @@ export class Transactions {
 
   get transactions(): Transaction[] {
     const transactions = this.transactionState();
-    return this.filter === 'all' ? transactions : transactions.filter((item) => item.type === this.filter);
+    return this.filterCategoryId === 'all'
+      ? transactions
+      : transactions.filter((item) => item.categoryId === this.filterCategoryId);
+  }
+
+  get categories(): Category[] {
+    return this.categoryState();
   }
 
   getCategory(id: string) {

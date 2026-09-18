@@ -25,6 +25,7 @@ export class Settings {
   newCategoryType: TransactionType = 'expense';
   categoryError = '';
   categorySaving = false;
+  categoryUpdatingId = '';
   private readonly categoryState;
 
   constructor(
@@ -59,6 +60,22 @@ export class Settings {
       this.categoryError = error instanceof Error ? error.message : 'Unable to create category.';
     } finally {
       this.categorySaving = false;
+    }
+  }
+
+  async updateCategoryType(category: Category, type: TransactionType): Promise<void> {
+    if (category.type === type) {
+      return;
+    }
+
+    this.categoryError = '';
+    this.categoryUpdatingId = category.id;
+    try {
+      await this.categoryService.updateCategoryType(category.id, type);
+    } catch (error) {
+      this.categoryError = error instanceof Error ? error.message : 'Không thể cập nhật danh mục.';
+    } finally {
+      this.categoryUpdatingId = '';
     }
   }
 
