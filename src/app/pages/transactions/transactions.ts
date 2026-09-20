@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { TransactionService } from '../../core/services/transaction';
@@ -7,16 +8,19 @@ import { CategoryService } from '../../core/services/category';
 import { Transaction } from '../../core/models/transaction';
 import { Category } from '../../core/models/category';
 import { TransactionCardComponent } from '../../shared/components/transaction-card/transaction-card';
+import { getIsoWeekRange, isDateInRange } from '../../core/utils/date-filter';
 
 @Component({
   selector: 'app-transactions',
   standalone: true,
-  imports: [CommonModule, RouterLink, TransactionCardComponent],
+  imports: [CommonModule, FormsModule, RouterLink, TransactionCardComponent],
   templateUrl: './transactions.html',
   styleUrl: './transactions.css',
 })
 export class Transactions {
   filterCategoryId = 'all';
+  filterWeek = '';
+  private appliedFilterWeek = '';
   private readonly transactionState;
   private readonly categoryState;
 
@@ -30,13 +34,19 @@ export class Transactions {
 
   get transactions(): Transaction[] {
     const transactions = this.transactionState();
-    return this.filterCategoryId === 'all'
-      ? transactions
-      : transactions.filter((item) => item.categoryId === this.filterCategoryId);
+    const weekRange = getIsoWeekRange(this.appliedFilterWeek);
+    return transactions.filter((item) =>
+      (this.filterCategoryId === 'all' || item.categoryId === this.filterCategoryId)
+      && (!weekRange || isDateInRange(item.date, weekRange)),
+    );
   }
 
   get categories(): Category[] {
     return this.categoryState();
+  }
+
+  applyFilters(): void {
+    this.appliedFilterWeek = this.filterWeek;
   }
 
   getCategory(id: string) {

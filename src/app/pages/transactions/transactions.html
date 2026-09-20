@@ -9,6 +9,14 @@
     </a>
   </header>
 
+  <form class="date-filter" (ngSubmit)="applyFilters()">
+    <label>
+      Tuần
+      <input name="filterWeek" type="week" [(ngModel)]="filterWeek">
+    </label>
+    <button class="filter-submit" type="submit">Lọc</button>
+  </form>
+
   <div class="filter-bar">
     <button [class.active]="filterCategoryId === 'all'" (click)="filterCategoryId = 'all'">Tất cả</button>
     <button

@@ -7,6 +7,7 @@ import { TransactionService } from '../../core/services/transaction';
 import { Category } from '../../core/models/category';
 import { Transaction } from '../../core/models/transaction';
 import { CurrencyPipe } from '../../shared/pipes/currency-pipe';
+import { getIsoWeekRange, isDateInRange } from '../../core/utils/date-filter';
 
 @Component({
   selector: 'app-statistics',
@@ -19,9 +20,11 @@ export class Statistics {
   filterDay: string | number = '';
   filterMonth: string | number = '';
   filterYear: string | number = '';
+  filterWeek = '';
   private appliedFilterDay: string | number = '';
   private appliedFilterMonth: string | number = '';
   private appliedFilterYear: string | number = '';
+  private appliedFilterWeek = '';
   chartMode: 'pie' | 'bar' = 'pie';
   private cachedTransactions: Transaction[] | null = null;
   private cachedFilterKey = '';
@@ -43,6 +46,7 @@ export class Statistics {
 
   get filteredTransactions() {
     const transactions = this.transactionState();
+    const weekRange = getIsoWeekRange(this.appliedFilterWeek);
     const now = new Date();
     const yearInput = this.filterValue(this.appliedFilterYear);
     const monthInput = this.filterValue(this.appliedFilterMonth);
@@ -50,7 +54,7 @@ export class Statistics {
     const year = this.toFilterNumber(yearInput) ?? now.getFullYear();
     const month = this.toFilterNumber(monthInput) ?? (!yearInput ? now.getMonth() + 1 : undefined);
     const day = this.toFilterNumber(dayInput);
-    const filterKey = `${year}-${month ?? ''}-${day ?? ''}`;
+    const filterKey = `${this.appliedFilterWeek}-${year}-${month ?? ''}-${day ?? ''}`;
     if (this.cachedTransactions === transactions && this.cachedFilterKey === filterKey) {
       return this.cachedFilteredTransactions;
     }
@@ -58,6 +62,9 @@ export class Statistics {
     this.cachedTransactions = transactions;
     this.cachedFilterKey = filterKey;
     this.cachedFilteredTransactions = transactions.filter((transaction) => {
+      if (weekRange) {
+        return isDateInRange(transaction.date, weekRange);
+      }
       const date = new Date(transaction.date);
       return !Number.isNaN(date.getTime())
         && date.getFullYear() === year
@@ -80,6 +87,10 @@ export class Statistics {
   get summary() {
     this.filteredTransactions;
     return this.cachedSummary;
+  }
+
+  get summaryPeriodLabel(): string {
+    return getIsoWeekRange(this.appliedFilterWeek) ? 'Chi tiêu tuần này' : 'Chi tiêu tháng này';
   }
 
   get categoryBreakdown(): Array<Category & { amount: number; percent: number }> {
@@ -126,6 +137,7 @@ export class Statistics {
     this.appliedFilterDay = this.filterDay;
     this.appliedFilterMonth = this.filterMonth;
     this.appliedFilterYear = this.filterYear;
+    this.appliedFilterWeek = this.filterWeek;
     this.cachedFilterKey = '';
   }
 
