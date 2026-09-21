@@ -1,15 +1,23 @@
-<section class="page-container">
+﻿<section class="page-container settings-page">
   <header class="page-header">
-    <div>
-      <span class="eyebrow">TÙY CHỈNH</span>
-      <h1>Cài đặt</h1>
+    <div class="page-brand">
+      <div class="brand-badge">
+        <span class="material-icons">tune</span>
+      </div>
+      <div class="page-copy">
+        <span class="eyebrow">Tùy chỉnh</span>
+        <h1>Cài đặt</h1>
+      </div>
     </div>
-    <span class="material-icons header-icon">tune</span>
+    <span class="header-icon material-icons">settings</span>
   </header>
 
   <section class="profile-card">
     <div class="avatar"><span class="material-icons">person</span></div>
-    <div><strong>Ví chi tiêu cá nhân</strong><span>Quản lý tài chính đơn giản</span></div>
+    <div>
+      <strong>Ví chi tiêu cá nhân</strong>
+      <span>Quản lý tài chính đơn giản</span>
+    </div>
     <span class="material-icons chevron">chevron_right</span>
   </section>
 
@@ -57,16 +65,16 @@
 
   <section class="settings-card">
     <h2>Dữ liệu</h2>
-    <button class="setting-row danger" (click)="resetData()">
+    <button class="setting-row danger" (click)="resetData()" type="button">
       <span><i class="material-icons">delete_outline</i><span>Xóa dữ liệu giao dịch</span></span>
       <i class="material-icons">chevron_right</i>
     </button>
   </section>
 
-  <button class="setting-row" (click)="logout()">
+  <button class="setting-row logout-row" (click)="logout()" type="button">
     <span><i class="material-icons">logout</i><span>Đăng xuất</span></span>
     <i class="material-icons">chevron_right</i>
   </button>
 
-  <p class="version">Nhìn cái chó gì</p>
+  <p class="version">v1.0 • Personal Finance</p>
 </section>

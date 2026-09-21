@@ -6,47 +6,51 @@
   </header>
 
   <form class="form-card" (ngSubmit)="save()">
-    <div class="type-switch">
-      <button type="button" [class.active]="type === 'expense'" (click)="type = 'expense'; categoryId = ''">
+    <div class="type-switch" role="tablist" aria-label="Loại giao dịch">
+      <button
+        type="button"
+        [class.active]="type === 'expense'"
+        [attr.aria-pressed]="type === 'expense'"
+        (click)="type = 'expense'; categoryId = ''">
         <span class="material-icons">arrow_downward</span> Khoản chi
       </button>
-      <button type="button" [class.active]="type === 'income'" (click)="type = 'income'; categoryId = ''">
+      <button
+        type="button"
+        [class.active]="type === 'income'"
+        [attr.aria-pressed]="type === 'income'"
+        (click)="type = 'income'; categoryId = ''">
         <span class="material-icons">arrow_upward</span> Khoản thu
       </button>
     </div>
 
-    <label>Số tiền
-      <div class="amount-input">
-        <input type="number" name="amount" [(ngModel)]="amount" (blur)="normalizeAmount()" min="1" placeholder="0" required>
-        <span>VNĐ</span>
-      </div>
-    </label>
+    <label for="transaction-amount">Số tiền</label>
+    <div class="amount-input">
+      <input id="transaction-amount" type="number" name="amount" [(ngModel)]="amount" (blur)="normalizeAmount()" min="1" placeholder="0" required aria-label="Số tiền giao dịch">
+      <span>VNĐ</span>
+    </div>
 
-    <label>Danh mục
-      <select name="categoryId" [(ngModel)]="categoryId">
-        <option value="" disabled>Chọn danh mục</option>
-        <option *ngFor="let category of availableCategories" [value]="category.id">{{ category.name }}</option>
-      </select>
-      <div class="new-category">
-        <input
-          name="newCategoryName"
-          [(ngModel)]="newCategoryName"
-          maxlength="50"
-          placeholder="Hoặc nhập danh mục mới"
-          aria-label="Tên danh mục mới">
-      </div>
-    </label>
+    <label for="transaction-category">Danh mục</label>
+    <select id="transaction-category" name="categoryId" [(ngModel)]="categoryId" required aria-label="Chọn danh mục">
+      <option value="" disabled>Chọn danh mục</option>
+      <option *ngFor="let category of availableCategories" [value]="category.id">{{ category.name }}</option>
+    </select>
+    <div class="new-category">
+      <input
+        name="newCategoryName"
+        [(ngModel)]="newCategoryName"
+        maxlength="50"
+        placeholder="Hoặc nhập danh mục mới"
+        aria-label="Tên danh mục mới">
+    </div>
 
-    <label>Ngày giao dịch
-      <input type="date" name="date" [(ngModel)]="date" required>
-    </label>
+    <label for="transaction-date">Ngày giao dịch</label>
+    <input id="transaction-date" type="date" name="date" [(ngModel)]="date" required aria-label="Ngày giao dịch">
 
-    <label>Ghi chú <span class="optional">(không bắt buộc)</span>
-      <textarea name="note" [(ngModel)]="note" rows="3" placeholder="Ví dụ: Ăn trưa cùng đồng nghiệp"></textarea>
-    </label>
+    <label for="transaction-note">Ghi chú <span class="optional">(không bắt buộc)</span></label>
+    <textarea id="transaction-note" name="note" [(ngModel)]="note" rows="3" placeholder="Ví dụ: Ăn trưa cùng đồng nghiệp" aria-label="Ghi chú giao dịch"></textarea>
 
-    <p class="error-message" *ngIf="errorMessage">{{ errorMessage }}</p>
-    <button class="submit-button" type="submit" [disabled]="saving">
+    <p class="error-message" *ngIf="errorMessage" role="alert">{{ errorMessage }}</p>
+    <button class="submit-button" type="submit" [disabled]="saving" [attr.aria-busy]="saving">
       {{ saving ? 'Đang lưu...' : (editId ? 'Cập nhật giao dịch' : 'Lưu giao dịch') }}
     </button>
   </form>

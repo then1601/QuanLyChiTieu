@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+﻿import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { toSignal } from '@angular/core/rxjs-interop';
@@ -42,6 +42,10 @@ export class Statistics {
   ) {
     this.transactionState = toSignal(this.transactionService.transactions$, { initialValue: [] });
     this.categoryState = toSignal(this.categoryService.categories$, { initialValue: [] });
+    const now = new Date();
+    this.filterMonth = now.getMonth() + 1;
+    this.filterYear = now.getFullYear();
+    this.applyFilters();
   }
 
   get filteredTransactions() {
@@ -93,6 +97,21 @@ export class Statistics {
     return getIsoWeekRange(this.appliedFilterWeek) ? 'Chi tiêu tuần này' : 'Chi tiêu tháng này';
   }
 
+  get salaryAmount(): number {
+    const salaryCategoryIds = new Set(
+      this.categoryState()
+        .filter((category) => category.type === 'income' && category.name.trim().toLocaleLowerCase() === 'lương')
+        .map((category) => category.id),
+    );
+    return this.filteredTransactions
+      .filter((transaction) => transaction.type === 'income' && salaryCategoryIds.has(transaction.categoryId))
+      .reduce((total, transaction) => total + transaction.amount, 0);
+  }
+
+  get salaryPercent(): number {
+    return this.summary.totalIncome ? Math.round(this.salaryAmount / this.summary.totalIncome * 100) : 0;
+  }
+
   get categoryBreakdown(): Array<Category & { amount: number; percent: number }> {
     const filteredTransactions = this.filteredTransactions;
     const categories = this.categoryState();
@@ -131,6 +150,25 @@ export class Statistics {
 
   get maxCategoryAmount(): number {
     return this.categoryBreakdown[0]?.amount ?? 1;
+  }
+
+  get budget(): { used: number; remaining: number; percent: number; status: 'safe' | 'warning' | 'danger'; label: string } {
+    const used = this.summary.totalExpense;
+    const limit = Math.max(used * 1.4, 2000000);
+    const remaining = Math.max(limit - used, 0);
+    const percent = Math.min(Math.round((used / limit) * 100), 100);
+    let status: 'safe' | 'warning' | 'danger' = 'safe';
+    let label = 'An toàn';
+
+    if (percent >= 90) {
+      status = 'danger';
+      label = 'Vượt ngân sách';
+    } else if (percent >= 70) {
+      status = 'warning';
+      label = 'Gần giới hạn';
+    }
+
+    return { used, remaining, percent, status, label };
   }
 
   applyFilters(): void {

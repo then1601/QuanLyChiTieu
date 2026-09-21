@@ -1,32 +1,40 @@
-<section class="page-container">
+﻿<section class="page-container transactions-page">
   <header class="page-header">
-    <div>
-      <span class="eyebrow">QUẢN LÝ CHI TIÊU</span>
-      <h1>Giao dịch</h1>
+    <div class="page-brand">
+      <div class="brand-badge">
+        <span class="material-icons">receipt_long</span>
+      </div>
+      <div class="page-copy">
+        <span class="eyebrow">Quản lý</span>
+        <h1>Giao dịch</h1>
+      </div>
     </div>
     <a class="icon-button" routerLink="/add" aria-label="Thêm giao dịch">
       <span class="material-icons">add</span>
     </a>
   </header>
 
-  <form class="date-filter" (ngSubmit)="applyFilters()">
-    <label>
-      Tuần
-      <input name="filterWeek" type="week" [(ngModel)]="filterWeek">
-    </label>
-    <button class="filter-submit" type="submit">Lọc</button>
-  </form>
+  <section class="panel">
+    <form class="date-filter" (ngSubmit)="applyFilters()">
+      <label>
+        <span>Tuần</span>
+        <input name="filterWeek" type="week" [(ngModel)]="filterWeek">
+      </label>
+      <button class="filter-submit" type="submit">Lọc</button>
+    </form>
 
-  <div class="filter-bar">
-    <button [class.active]="filterCategoryId === 'all'" (click)="filterCategoryId = 'all'">Tất cả</button>
-    <button
-      *ngFor="let category of categories"
-      [class.active]="filterCategoryId === category.id"
-      (click)="filterCategoryId = category.id">
-      <span class="material-icons">{{ category.icon }}</span>
-      {{ category.name }}
-    </button>
-  </div>
+    <div class="filter-bar">
+      <button [class.active]="filterCategoryId === 'all'" (click)="filterCategoryId = 'all'" type="button">Tất cả</button>
+      <button
+        *ngFor="let category of categories"
+        [class.active]="filterCategoryId === category.id"
+        (click)="filterCategoryId = category.id"
+        type="button">
+        <span class="material-icons">{{ category.icon }}</span>
+        {{ category.name }}
+      </button>
+    </div>
+  </section>
 
   <div class="transaction-list" *ngIf="transactions.length; else empty">
     <div class="transaction-row" *ngFor="let transaction of transactions; trackBy: trackTransaction">
@@ -34,7 +42,7 @@
       <a class="edit-button" [routerLink]="['/edit', transaction.id]" aria-label="Sửa giao dịch">
         <span class="material-icons">edit</span>
       </a>
-      <button class="delete-button" (click)="deleteTransaction(transaction.id)" aria-label="Xóa giao dịch">
+      <button class="delete-button" (click)="deleteTransaction(transaction.id)" aria-label="Xóa giao dịch" type="button">
         <span class="material-icons">delete_outline</span>
       </button>
     </div>

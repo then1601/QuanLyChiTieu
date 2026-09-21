@@ -1,13 +1,14 @@
 .app-content {
   min-height: 100vh;
-  padding-bottom: 78px;
+  padding-bottom: 88px;
+  background: var(--app-bg);
 }
 
 .auth-loading {
   display: grid;
   min-height: 100vh;
   place-items: center;
-  color: #64748b;
+  color: var(--text-soft);
   font-size: 15px;
 }
 
@@ -16,14 +17,16 @@
   right: 0;
   bottom: 0;
   left: 0;
-  z-index: 10;
+  z-index: 30;
   display: flex;
-  justify-content: space-around;
   align-items: center;
-  height: 68px;
-  background: #fff;
-  border-top: 1px solid #e5e7eb;
-  box-shadow: 0 -4px 16px rgba(15, 23, 42, .06);
+  justify-content: space-around;
+  height: 76px;
+  padding: 8px 10px 12px;
+  background: rgba(255, 255, 255, 0.92);
+  backdrop-filter: blur(12px);
+  border-top: 1px solid var(--border);
+  box-shadow: 0 -12px 28px rgba(15, 23, 42, 0.08);
 }
 
 .bottom-nav a {
@@ -31,22 +34,47 @@
   flex: 1;
   flex-direction: column;
   align-items: center;
-  gap: 3px;
-  color: #94a3b8;
+  justify-content: center;
+  gap: 4px;
+  min-width: 0;
+  color: var(--text-muted);
   font-size: 11px;
+  font-weight: 600;
   text-decoration: none;
+  transition: color 0.2s ease, transform 0.2s ease;
 }
 
-.bottom-nav a.active { color: #1a56db; }
-.bottom-nav .material-icons { font-size: 22px; }
+.bottom-nav a:hover,
+.bottom-nav a:focus-visible {
+  color: var(--primary-1);
+}
+
+.bottom-nav a.active {
+  color: var(--primary-1);
+}
+
+.bottom-nav .material-icons {
+  font-size: 22px;
+}
+
 .bottom-nav .add-button {
-  flex: 0 0 52px;
-  width: 52px;
-  height: 52px;
-  margin: -26px 8px 0;
-  border-radius: 50%;
+  display: inline-flex;
+  flex: 0 0 60px;
+  align-items: center;
   justify-content: center;
+  width: 60px;
+  height: 60px;
+  margin: -26px 8px 0;
+  border-radius: 18px;
   color: #fff;
-  background: #1a56db;
-  box-shadow: 0 6px 14px rgba(26, 86, 219, .3);
+  background: linear-gradient(135deg, var(--primary-1), var(--primary-2));
+  box-shadow: 0 12px 24px rgba(79, 70, 229, 0.28);
+}
+
+.bottom-nav .add-button .material-icons {
+  font-size: 28px;
+}
+
+body.dark-theme .bottom-nav {
+  background: rgba(17, 24, 39, 0.9);
 }

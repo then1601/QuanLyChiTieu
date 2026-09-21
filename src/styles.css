@@ -1,114 +1,76 @@
-/* You can add global styles to this file, and also import other style files */
+:root {
+  --app-bg: #f8fafc;
+  --surface: #ffffff;
+  --surface-alt: #f1f5f9;
+  --surface-strong: #e2e8f0;
+  --primary-1: #2563eb;
+  --primary-2: #4f46e5;
+  --primary-soft: #dbeafe;
+  --text: #0f172a;
+  --text-soft: #64748b;
+  --text-muted: #94a3b8;
+  --border: #e2e8f0;
+  --income: #059669;
+  --income-soft: #ecfdf5;
+  --expense: #dc2626;
+  --expense-soft: #fef2f2;
+  --warning: #d97706;
+  --warning-soft: #fff7ed;
+  --shadow-soft: 0 12px 32px rgba(15, 23, 42, 0.08);
+  --shadow-card: 0 10px 24px rgba(37, 99, 235, 0.08);
+  --radius-xl: 20px;
+  --radius-lg: 16px;
+  --radius-md: 12px;
+  --radius-sm: 10px;
+}
+
+* { box-sizing: border-box; }
+
 html, body {
   margin: 0;
-  background: #f8f9fd;
-  color: #1e293b;
+  min-height: 100%;
+  background: var(--app-bg);
+  color: var(--text);
+  font-family: 'Inter', 'Be Vietnam Pro', 'Segoe UI', sans-serif;
   transition: background-color .2s ease, color .2s ease;
 }
 
-body.dark-theme {
-  background: #0f172a;
-  color: #e2e8f0;
+body {
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
 }
+
+body.dark-theme {
+  --app-bg: #0f172a;
+  --surface: #111827;
+  --surface-alt: #1e293b;
+  --surface-strong: #334155;
+  --text: #e2e8f0;
+  --text-soft: #cbd5e1;
+  --text-muted: #94a3b8;
+  --border: rgba(148, 163, 184, 0.28);
+  --income-soft: rgba(5, 150, 105, 0.12);
+  --expense-soft: rgba(220, 38, 38, 0.12);
+  --warning-soft: rgba(217, 119, 6, 0.12);
+  background: var(--app-bg);
+  color: var(--text);
+}
+
+img, svg { display: block; max-width: 100%; }
+button, input, select, textarea { font: inherit; }
+
+a { color: inherit; }
 
 body.dark-theme .app-content,
 body.dark-theme .page-container {
-  background: #0f172a;
+  background: var(--app-bg);
 }
 
-body.dark-theme .header h1,
-body.dark-theme h1,
-body.dark-theme h2,
-body.dark-theme h3,
-body.dark-theme .section-header h3,
-body.dark-theme .profile-card strong,
-body.dark-theme .setting-row,
-body.dark-theme .month-selector,
-body.dark-theme .month-selector input {
-  color: #e2e8f0;
-}
-
-body.dark-theme .balance-card,
-body.dark-theme .summary-box,
-body.dark-theme .section,
-body.dark-theme .profile-card,
-body.dark-theme .settings-card,
-body.dark-theme .bottom-nav {
-  background-color: #1e293b;
-}
-
-body.dark-theme .summary-box.income {
-  background-color: #12352d;
-}
-
-body.dark-theme .summary-box.expense {
-  background-color: #3b2027;
-}
-
-body.dark-theme .month-selector {
-  background: #1e293b;
-}
-
-body.dark-theme .setting-row {
-  border-color: #334155;
-}
-
-body.dark-theme .bottom-nav {
-  border-top-color: #334155;
-}
-
-body.dark-theme .transaction-card,
-body.dark-theme .form-card,
-body.dark-theme .statistics-card {
-  background-color: #1e293b;
-}
-
-body.dark-theme .filter-bar button,
-body.dark-theme .transaction-list,
-body.dark-theme .section-card {
-  color: #e2e8f0;
-  background-color: #1e293b;
-}
-
-body.dark-theme .empty-state h2,
-body.dark-theme .section-card h2,
-body.dark-theme .category-row,
-body.dark-theme .category-row strong {
-  color: #e2e8f0;
-}
-
-body.dark-theme .empty-state,
-body.dark-theme .muted,
-body.dark-theme .category-info small {
-  color: #94a3b8;
-}
-
-body.dark-theme .progress {
-  background-color: #334155;
-}
-
-body.dark-theme input,
-body.dark-theme select,
-body.dark-theme textarea,
-body.dark-theme .amount-input {
-  color: #e2e8f0;
-  border-color: #475569;
-  background-color: #0f172a;
-}
-
-body.dark-theme input::placeholder,
-body.dark-theme textarea::placeholder {
-  color: #94a3b8;
-}
-
-body.dark-theme .category-form input,
-body.dark-theme .category-form select {
-  color: #e2e8f0;
-  border-color: #475569;
-  background: #0f172a;
-}
-
-body.dark-theme .category-chip {
-  color: #cbd5e1;
-  background: #334155;
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
 }

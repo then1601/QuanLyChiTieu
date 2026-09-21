@@ -1,49 +1,111 @@
-<div class="page-container">
-  <header class="header">
-    <div class="title">
-      <span class="material-icons">account_balance_wallet</span>
-      <h1>Chi tiêu của tôi</h1>
+<section class="page-container dashboard-page">
+  <header class="page-header">
+    <div class="page-brand">
+      <div class="brand-badge">
+        <span class="material-icons">account_balance_wallet</span>
+      </div>
+      <div class="page-copy">
+        <span class="eyebrow">Overview</span>
+        <h1>Chi tiêu của tôi</h1>
+      </div>
     </div>
-    <span class="material-icons">settings</span>
+
+    <button class="icon-button" type="button" [routerLink]="['/settings']" aria-label="Cài đặt">
+      <span class="material-icons">settings</span>
+    </button>
   </header>
 
-  <form class="date-filter" (ngSubmit)="applyFilters()">
-    <label>Ngày<input name="filterDay" type="number" min="1" max="31" [(ngModel)]="filterDay" placeholder="DD"></label>
-    <label>Tháng<input name="filterMonth" type="number" min="1" max="12" [(ngModel)]="filterMonth" placeholder="MM"></label>
-    <label>Năm<input name="filterYear" type="number" min="2000" max="2100" [(ngModel)]="filterYear" placeholder="YYYY"></label>
-    <button class="filter-submit" type="submit">Lọc</button>
-  </form>
-
-  <div class="balance-card">
-    <div class="balance-info">
-      <span class="label">Số dư hiện tại</span>
-      <h2 class="amount">{{ summary.balance | appCurrency:(summary.balance >= 0 ? 'income' : 'expense') }}</h2>
+  <section class="balance-card" [class.balance-hidden]="!showBalance" aria-live="polite">
+    <div class="balance-header">
+      <span class="eyebrow light">Số dư hiện tại</span>
+      <button class="toggle-balance" type="button" (click)="toggleBalance()" [attr.aria-label]="showBalance ? 'Ẩn số dư' : 'Hiện số dư'">
+        <span class="material-icons">{{ showBalance ? 'visibility' : 'visibility_off' }}</span>
+      </button>
     </div>
-    <span class="material-icons wallet-icon">account_balance_wallet</span>
-  </div>
+
+    <div class="balance-body">
+      <div class="balance-value" [attr.aria-label]="showBalance ? 'Số dư hiện tại' : 'Số dư đã được ẩn'">
+        {{ showBalance ? (summary.balance | appCurrency:(summary.balance >= 0 ? 'income' : 'expense')) : '••••••••' }}
+      </div>
+
+      <button class="add-action" type="button" [routerLink]="['/add']" aria-label="Thêm giao dịch">
+        <span class="material-icons">add</span>
+      </button>
+    </div>
+
+    <div class="balance-meta">
+      <span>Thu nhập: <strong>{{ summary.totalIncome | appCurrency:'income' }}</strong></span>
+      <span>Chi tiêu: <strong>{{ summary.totalExpense | appCurrency:'expense' }}</strong></span>
+    </div>
+  </section>
 
   <div class="summary-row">
-    <div class="summary-box income">
-      <span class="label">Tổng thu <span class="material-icons">arrow_upward</span></span>
-      <span class="value">{{ summary.totalIncome | appCurrency:'income' }}</span>
-    </div>
-    <div class="summary-box expense">
-      <span class="label">Tổng chi <span class="material-icons">arrow_downward</span></span>
-      <span class="value">{{ summary.totalExpense | appCurrency:'expense' }}</span>
-    </div>
+    <article class="summary-box income">
+      <div class="summary-label">
+        <span>Tổng thu</span>
+        <span class="material-icons">arrow_upward</span>
+      </div>
+      <strong>{{ summary.totalIncome | appCurrency:'income' }}</strong>
+    </article>
+
+    <article class="summary-box expense">
+      <div class="summary-label">
+        <span>Tổng chi</span>
+        <span class="material-icons">arrow_downward</span>
+      </div>
+      <strong>{{ summary.totalExpense | appCurrency:'expense' }}</strong>
+    </article>
   </div>
 
-  <div class="section">
-    <div class="section-header">
-      <h3>Giao dịch gần đây</h3>
-      <a href="#">Xem tất cả</a>
+  <section class="panel">
+    <div class="panel-header compact">
+      <h2>Khoảng thời gian</h2>
     </div>
-    <div class="transaction-list">
-      <app-transaction-card 
+
+    <div class="segmented-control" role="tablist" aria-label="Chọn khoảng thời gian">
+      <button type="button" [class.active]="rangePreset === 'today'" (click)="setRangePreset('today')">Hôm nay</button>
+      <button type="button" [class.active]="rangePreset === 'month'" (click)="setRangePreset('month')">Tháng này</button>
+      <button type="button" [class.active]="rangePreset === 'year'" (click)="setRangePreset('year')">Năm nay</button>
+    </div>
+
+    <form class="date-filter" (ngSubmit)="applyFilters()">
+      <label>
+        <span>Ngày</span>
+        <input name="filterDay" type="number" min="1" max="31" [(ngModel)]="filterDay" placeholder="DD">
+      </label>
+      <label>
+        <span>Tháng</span>
+        <input name="filterMonth" type="number" min="1" max="12" [(ngModel)]="filterMonth" placeholder="MM">
+      </label>
+      <label>
+        <span>Năm</span>
+        <input name="filterYear" type="number" min="2000" max="2100" [(ngModel)]="filterYear" placeholder="YYYY">
+      </label>
+      <button class="filter-submit" type="submit">Lọc</button>
+    </form>
+  </section>
+
+  <section class="panel">
+    <div class="panel-header">
+      <h2>Giao dịch gần đây</h2>
+      <a routerLink="/transactions">Xem tất cả</a>
+    </div>
+
+    <div class="transaction-list" *ngIf="recentTransactions.length; else emptyTransactions">
+      <app-transaction-card
         *ngFor="let tx of recentTransactions; trackBy: trackTransaction"
-        [transaction]="tx" 
+        [transaction]="tx"
         [category]="getCategory(tx.categoryId)">
       </app-transaction-card>
     </div>
-  </div>
-</div>
+
+    <ng-template #emptyTransactions>
+      <div class="empty-state">
+        <span class="material-icons">receipt_long</span>
+        <h3>Chưa có giao dịch</h3>
+        <p>Thêm giao dịch đầu tiên để theo dõi chi tiêu của bạn.</p>
+        <a routerLink="/add">Thêm giao dịch</a>
+      </div>
+    </ng-template>
+  </section>
+</section>

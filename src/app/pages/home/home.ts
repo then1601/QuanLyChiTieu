@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { RouterLink } from '@angular/router';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { TransactionService } from '../../core/services/transaction';
 import { CategoryService } from '../../core/services/category';
@@ -9,10 +10,12 @@ import { TransactionCardComponent } from '../../shared/components/transaction-ca
 import { Transaction } from '../../core/models/transaction';
 import { Category } from '../../core/models/category';
 
+type RangePreset = 'today' | 'month' | 'year';
+
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [CommonModule, FormsModule, CurrencyPipe, TransactionCardComponent],
+  imports: [CommonModule, FormsModule, CurrencyPipe, TransactionCardComponent, RouterLink],
   templateUrl: './home.html',
   styleUrls: ['./home.css']
 })
@@ -20,6 +23,8 @@ export class HomeComponent {
   filterDay: string | number = '';
   filterMonth: string | number = '';
   filterYear: string | number = '';
+  showBalance = true;
+  rangePreset: RangePreset = 'month';
   private appliedFilterDay: string | number = '';
   private appliedFilterMonth: string | number = '';
   private appliedFilterYear: string | number = '';
@@ -32,9 +37,13 @@ export class HomeComponent {
 
   constructor(
     private transactionService: TransactionService,
-    private categoryService: CategoryService
+    private categoryService: CategoryService,
   ) {
     this.transactions = toSignal(this.transactionService.transactions$, { initialValue: [] });
+    const now = new Date();
+    this.filterMonth = now.getMonth() + 1;
+    this.filterYear = now.getFullYear();
+    this.applyFilters();
   }
 
   get monthlyTransactions(): Transaction[] {
@@ -82,12 +91,41 @@ export class HomeComponent {
     return this.cachedSummary;
   }
 
+  get balanceDisplay(): string {
+    return this.showBalance ? this.summary.balance.toString() : '••••••••';
+  }
+
   getCategory(id: string): Category | undefined {
     return this.categoryService.getCategoryById(id);
   }
 
   trackTransaction(_: number, transaction: Transaction): string {
     return transaction.id;
+  }
+
+  toggleBalance(): void {
+    this.showBalance = !this.showBalance;
+  }
+
+  setRangePreset(preset: RangePreset): void {
+    const now = new Date();
+    this.rangePreset = preset;
+
+    if (preset === 'today') {
+      this.filterDay = now.getDate();
+      this.filterMonth = now.getMonth() + 1;
+      this.filterYear = now.getFullYear();
+    } else if (preset === 'month') {
+      this.filterDay = '';
+      this.filterMonth = now.getMonth() + 1;
+      this.filterYear = now.getFullYear();
+    } else {
+      this.filterDay = '';
+      this.filterMonth = '';
+      this.filterYear = now.getFullYear();
+    }
+
+    this.applyFilters();
   }
 
   applyFilters(): void {
